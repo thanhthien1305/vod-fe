@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: 'Netflix Sans';
+    src: url('/fonts/netflix-sans-font/NetflixSans-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Netflix Sans';
+    src: url('/fonts/netflix-sans-font/NetflixSans-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
