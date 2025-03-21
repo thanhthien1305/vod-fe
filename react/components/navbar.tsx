@@ -9,8 +9,7 @@ export default function App() {
       <header className="z-40 flex px-6 gap-4 w-full flex-row relative flex-nowrap items-center justify-between h-[var(--navbar-height)]">
         <div className="flex gap-8">
           <div>
-          <SVG src="./logo.svg"/>
-            <p className="font-bold text-inherit">ACME</p>
+            <SVG src="./logo.svg" />
           </div>
           <div className="flex gap-4 items-center">
             <div>
@@ -29,14 +28,14 @@ export default function App() {
               </Link>
             </div>
             <div className="hidden lg:flex">
-              <Link href="#">Login</Link>
+              <Link href="/">Login</Link>
             </div>
 
           </div>
         </div>
-        <div>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            Sign Up
+        <div className="flex gap-2">
+          <Button as={Link} color="primary" href="/auth" variant="flat">
+            Sign In
           </Button>
         </div>
       </header>

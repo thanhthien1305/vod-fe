@@ -26,10 +26,12 @@
     "clsx": "2.1.1",
     "framer-motion": "11.13.1",
     "intl-messageformat": "^10.5.0",
+    "jose": "^6.0.10",
     "next": "15.2.3",
     "next-themes": "^0.4.4",
     "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "react-dom": "18.3.1",
+    "react-inlinesvg": "^4.2.0"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "15.0.4",
