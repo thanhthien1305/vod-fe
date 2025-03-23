@@ -1,9 +1,22 @@
-import { title } from "@/components/primitives";
+// pages/login.js
+"use client";
+import { Button } from '@heroui/button';
+import React, { useEffect } from 'react';
+import { signin } from '../api/auth/auth';
 
-export default function AuthPage() {
-  return (
-    <div>
-      <h1 className={title()}>Blog</h1>
-    </div>
-  );
-}
+const Login = () => {
+  const getCodeFromUrl = () => {
+    const queryParams = new URLSearchParams(window.location.search);
+    return queryParams.get('code');
+  };
+
+  useEffect(() => {
+    const code = getCodeFromUrl();
+    if (code) {
+      signin(code);
+    }
+  }, []);
+  return <Button onPress={() => signin()}>Login</Button>;
+};
+
+export default Login;
