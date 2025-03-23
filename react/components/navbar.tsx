@@ -3,38 +3,17 @@
 import { Link, Button } from "@heroui/react";
 import SVG from "react-inlinesvg";
 
-export default function App() {
+export default function Navbar() {
   return (
-    <nav className="flex z-40 h-auto items-center justify-center data-[menu-open=true]:border-none sticky top-0 inset-x-0 backdrop-blur-lg data-[menu-open=true]:backdrop-blur-xl backdrop-saturate-150 bg-background/70 w-full">
-      <header className="z-40 flex px-6 gap-4 w-full flex-row relative flex-nowrap items-center justify-between h-[var(--navbar-height)]">
+    <nav className="flex z-40 h-[64] w-[80%] mx-auto bg-transparent">
+      <header className="z-40 fixed top-0 left-0 right-0 flex px-6 gap-4 w-full flex-row relative flex-nowrap items-center justify-between h-[var(--navbar-height)]">
         <div className="flex gap-8">
-          <div>
-            <SVG src="./logo.svg" />
-          </div>
-          <div className="flex gap-4 items-center">
-            <div>
-              <Link color="foreground" href="#">
-                Features
-              </Link>
-            </div>
-            <div >
-              <Link aria-current="page" href="#">
-                Customers
-              </Link>
-            </div>
-            <div>
-              <Link color="foreground" href="#">
-                Integrations
-              </Link>
-            </div>
-            <div className="hidden lg:flex">
-              <Link href="/">Login</Link>
-            </div>
-
-          </div>
+          <Link href="/">
+            <SVG src="./logo.svg" width={148} height={32}/>
+          </Link>
         </div>
         <div className="flex gap-2">
-          <Button as={Link} color="primary" href="/auth" variant="flat">
+          <Button as={Link} href="/auth" variant="flat" className="rounded-none bg-red-primary text-regular-smallbody">
             Sign In
           </Button>
         </div>

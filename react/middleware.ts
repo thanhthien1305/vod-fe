@@ -4,14 +4,7 @@ import { decrypt } from "./app/lib/session";
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico, sitemap.xml, robots.txt (metadata files)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.svg|.*\\.jpg|.*\\.jpeg|.*\\.png|.*\\.gif).*)',
   ],
 }
 
@@ -22,7 +15,7 @@ export default async function middleware(request: NextRequest) {
 
   const session = await decrypt(cookie);
   // Xử lý nếu không được xác thực
-  if (!session) {
+  if (!cookie) {
     if (path.startsWith("/auth")) {
       return NextResponse.next();
     } else {
