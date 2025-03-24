@@ -10,14 +10,26 @@ const Login = () => {
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
 
-  useEffect(() => {
-    if (code) {
-      console.log('Mã code:', code);
-      signin(code);
+  const handleGetAccessToken = async (code?: string) => {
+    try {
+      const result = await signin(code)?.then((res) => res.data);
+      console.log(result)
+      if(result.data.accessToken) {
+        localStorage.setItem("video-on-demand", result.data.accessToken);
+      }
+    } catch (error) {
+      console.log(error);
     }
-  }, [code]);
+  }
 
-  return <Button onPress={() => signin()}>Login</Button>;
+  // useEffect(() => {
+  //   if (code) {
+  //     console.log('Mã code:', code);
+  //     handleGetAccessToken(code);
+  //   }
+  // }, [code]);
+
+  return <Button onPress={() => handleGetAccessToken(code || "")}>Login</Button>;
 };
 
 export default Login;

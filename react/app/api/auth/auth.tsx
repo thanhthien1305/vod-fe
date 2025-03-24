@@ -1,7 +1,8 @@
-import API, { encodeToBase64 } from "@/app/utils/api";
+"use client";
+import API from "@/app/utils/api";
 
 const cognitoDomain = process.env.NEXT_PUBLIC_COGNITO_DOMAIN;
-const redirect_url = window.location.href; 
+const redirect_url = "http://localhost:3000/auth"; 
 const clientId = process.env.NEXT_PUBLIC_CLIENT_ID; 
 
 export function signin(code?: string) {
@@ -18,13 +19,12 @@ export function signin(code?: string) {
     
         window.location.href = `${cognitoDomain}/login?${queryString}`;
     } else {
-        // Xử lý khi có code, ví dụ gọi API để lấy token
-        const params = new URLSearchParams({
+        const data = new URLSearchParams({
             grant_type: "authorization_code",
             client_id: clientId,
             code: code,
-            redirect_uri: redirect_url
-        }).toString()
-        return API.post(`/oauth2/token?${params}`);
+            redirect_uri: redirect_url,
+        }).toString();
+        return API.post(`/oauth2/token`, data);
     }
 }

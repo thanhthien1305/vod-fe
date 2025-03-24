@@ -6,13 +6,12 @@ import axios, {
 import { toast } from "sonner";
 import { logoutApp } from "../actions/auth";
 
-export function encodeToBase64(clientSecret: string): string {
-  const credentials = `clientId:${clientSecret}`;
-  const buffer = Buffer.from(credentials);
-  const base64Credentials = buffer.toString('base64');
-  return base64Credentials;
+export function encodeToBase64(clientId: string, clientSecret: string): string {
+  const credentials = `${clientId}:${clientSecret}`;
+  return Buffer.from(credentials).toString('base64');
 }
 const clientSecret = process.env.NEXT_PUBLIC_CLIENT_SECRET;
+const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
 
 const API = axios.create({
   baseURL: process.env.NEXT_PUBLIC_COGNITO_DOMAIN,
@@ -22,21 +21,23 @@ const API = axios.create({
 });
 
 const requestHandler = (request: InternalAxiosRequestConfig) => {
-  if (!clientSecret)
-    return;
+
   request.headers = request.headers || ({} as AxiosRequestHeaders);
-  const authorization_code = encodeToBase64(clientSecret);
-  request.headers.Authorization = `Basic ${authorization_code}`;
   if (
     localStorage.getItem("video-on-demand") == undefined &&
     localStorage.getItem("video-on-demand") == null
   ) {
-    request.headers["Content-Type"] = "application/x-www-form-urlencoded";
-  }
 
-  request.headers["Client-Host-Name"] = window.location.hostname;
-  request.headers["Client-Device"] = "WEB";
-  request.headers["Client-Device-Type"] = "WEB";
+    request.headers["Content-Type"] = "application/x-www-form-urlencoded";
+    if (clientSecret && clientId) {
+      const authorization_code = encodeToBase64(clientId, clientSecret);
+      request.headers.Authorization = `Basic ` +  authorization_code;
+    }
+  } else {
+    request.headers.Authorization = `Bearer ${localStorage.getItem(
+      "video-on-demand"
+    )}`;
+  }
 
   return request;
 };
