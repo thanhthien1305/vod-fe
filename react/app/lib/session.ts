@@ -41,7 +41,7 @@ export async function createSession(accessToken: string) {
 }
 
 export async function updateSession() {
-  const session = (await cookies()).get('session-lms')?.value
+  const session = (await cookies()).get('video-on-demand')?.value
   const payload = await decrypt(session)
  
   if (!session || !payload) {
@@ -51,7 +51,7 @@ export async function updateSession() {
   const expires = new Date(Date.now() +   60 * 60 * 1000)
  
   const cookieStore = await cookies()
-  cookieStore.set('session-lms', session, {
+  cookieStore.set('video-on-demand', session, {
     httpOnly: true,
     secure: true,
     expires: expires,
@@ -62,5 +62,5 @@ export async function updateSession() {
 
 export async function deleteSession() {
   const cookieStore = await cookies()
-  cookieStore.delete('session-lms')
+  cookieStore.delete('video-on-demand')
 }
