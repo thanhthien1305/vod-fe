@@ -14,7 +14,7 @@ export function signin(code?: string) {
             redirect_uri: redirect_url
         }).toString();
     
-        window.location.href = `${cognitoDomain}/login?${queryString}`;
+        window.location.href = `${cognitoDomain}login?${queryString}`;
     } else {
         // Xử lý khi có code, ví dụ gọi API để lấy token
         fetch(`${cognitoDomain}/oauth2/token`, {
