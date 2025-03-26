@@ -28,3 +28,27 @@ export function signin(code?: string) {
         return API.post(`/oauth2/token`, data);
     }
 }
+
+export function signup(code?: string) {
+    if (!clientId || !cognitoDomain) {
+        console.error("Client ID or Cognito Domain is not defined.");
+        return;
+    }
+    if(!code) {
+        const queryString: string = new URLSearchParams({
+            response_type: "code",
+            client_id: clientId,
+            redirect_uri: redirect_url
+        }).toString();
+    
+        window.location.href = `${cognitoDomain}/signup?${queryString}`;
+    } else {
+        const data = new URLSearchParams({
+            grant_type: "authorization_code",
+            client_id: clientId,
+            code: code,
+            redirect_uri: redirect_url,
+        }).toString();
+        return API.post(`/oauth2/token`, data);
+    }
+}

@@ -3,33 +3,37 @@
 import { Button } from '@heroui/button';
 import React, { useEffect } from 'react';
 import { signin } from '../api/auth/auth';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { loginApp } from '../actions/auth';
 
-const Login = () => {
-  //pass : ULjg.YZuUkqbzq7
+const AuthPage = () => {
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
+  const router = useRouter();
 
-  const handleGetAccessToken = async (code?: string) => {
+  const handleLogin = async (code: string) => {
     try {
-      const result = await signin(code)?.then((res) => res.data);
-      console.log(result)
-      if(result.data.accessToken) {
-        localStorage.setItem("video-on-demand", result.data.accessToken);
+      const res = await signin(code)?.then((res) => res.data);
+
+      if(res.access_token) {
+        localStorage.setItem("video-on-demand", res.access_token);
+        loginApp(res.access_token);
+        console.log(res);
+        // router.push("/");
       }
     } catch (error) {
       console.log(error);
     }
   }
 
-  // useEffect(() => {
-  //   if (code) {
-  //     console.log('Mã code:', code);
-  //     handleGetAccessToken(code);
-  //   }
-  // }, [code]);
+  useEffect(() => {
+    const isLogin = localStorage.getItem("video-on-demand") != null;
+    if (code && !isLogin) {
+      handleLogin(code);
+    }
+  }, [code]);
 
-  return <Button onPress={() => handleGetAccessToken(code || "")}>Login</Button>;
+  return <Button onPress={() => signin("")} disabled={!!code}>Login</Button>;
 };
 
-export default Login;
+export default AuthPage;
