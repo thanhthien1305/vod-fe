@@ -1,6 +1,5 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { decrypt } from "./app/lib/session";
 
 export const config = {
   matcher: [
@@ -13,7 +12,7 @@ export default async function middleware(request: NextRequest) {
   const path = `${url.pathname}${url.searchParams.toString() ? `?${url.searchParams.toString()}` : ""}`;
   const cookie = (await cookies()).get('video-on-demand')?.value;
 
-  const session = await decrypt(cookie);
+  // const session = await decrypt(cookie);
   // Xử lý nếu không được xác thực
   if (!cookie) {
     if (path.startsWith("/auth")) {
@@ -24,7 +23,7 @@ export default async function middleware(request: NextRequest) {
   }
 
   // Trường hợp đã được xác thực và đang ở trang login
-  if (session && path === "/auth") {
+  if (cookie && path === "/auth") {
     return NextResponse.redirect(new URL("/", url));
   }
   return NextResponse.next();
