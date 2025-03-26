@@ -52,3 +52,7 @@ export function signup(code?: string) {
         return API.post(`/oauth2/token`, data);
     }
 }
+
+export function getMe() {
+    return API.get(`/oauth2/userInfo`);
+}

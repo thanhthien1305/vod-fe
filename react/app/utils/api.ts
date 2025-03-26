@@ -21,13 +21,11 @@ const API = axios.create({
 });
 
 const requestHandler = (request: InternalAxiosRequestConfig) => {
-
   request.headers = request.headers || ({} as AxiosRequestHeaders);
   if (
     localStorage.getItem("video-on-demand") == undefined &&
     localStorage.getItem("video-on-demand") == null
   ) {
-
     request.headers["Content-Type"] = "application/x-www-form-urlencoded";
     if (clientSecret && clientId) {
       const authorization_code = encodeToBase64(clientId, clientSecret);

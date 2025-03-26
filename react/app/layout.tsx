@@ -8,6 +8,7 @@ import { Providers } from "./providers";
 import { siteConfig } from "@/config/site";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import { AppProvider } from "./context/AppContext";
 
 
 export const metadata: Metadata = {
@@ -45,12 +46,13 @@ export default function RootLayout({
           <div className="relative flex flex-col h-screen">
             <Navbar />
             <main className="mx-auto flex-grow">
-              {children}
+              <AppProvider>{children}</AppProvider>
             </main>
-            <Footer/>
+            <Footer />
           </div>
         </Providers>
       </body>
+
     </html>
   );
 }
