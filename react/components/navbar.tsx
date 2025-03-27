@@ -5,8 +5,8 @@ import SVG from "react-inlinesvg";
 
 export default function Navbar() {
   return (
-    <nav className="flex z-40 h-[64] w-[80%] mx-auto bg-transparent">
-      <header className="z-40 fixed top-0 left-0 right-0 flex px-6 gap-4 w-full flex-row relative flex-nowrap items-center justify-between h-[var(--navbar-height)]">
+    <nav className="flex z-40 h-[64px] w-[80%] mx-auto bg-transparent" style={{height: "64px"}}>
+      <header className="z-40 h-[64px] fixed top-0 left-0 right-0 flex px-6 gap-4 w-full flex-row relative flex-nowrap items-center justify-between h-[var(--navbar-height)]">
         <div className="flex gap-8">
           <Link href="/">
             <SVG src="./logo.svg" width={148} height={32}/>

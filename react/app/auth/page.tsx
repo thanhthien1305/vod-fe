@@ -18,8 +18,7 @@ const AuthPage = () => {
       if(res.access_token) {
         localStorage.setItem("video-on-demand", res.access_token);
         loginApp(res.access_token);
-        console.log(res);
-        // router.push("/");
+        router.push("/");
       }
     } catch (error) {
       console.log(error);
