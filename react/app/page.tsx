@@ -2,6 +2,8 @@
 
 import CardFilm from "@/components/film-card";
 import { Button, Input } from "@heroui/react";
+import { Carousel } from "./context/CarouselContext ";
+import { CarouselMain } from "@/components/carousel";
 
 export default function Home() {
   return (
@@ -19,11 +21,7 @@ export default function Home() {
         <div className="w-[80%] space-y-4">
           <h1 className="text-white text-3xl font-semibold">Match to you</h1>
 
-          <div className="flex max-w-[100%] gap-4">
-            {Array.from({ length: 10 }).map((_, index) => (
-              <CardFilm key={index} /> // Đừng quên thêm key
-            ))}
-          </div>
+            <CarouselMain/>
         </div>
 
       </div>

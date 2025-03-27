@@ -25,6 +25,7 @@
     "@react-aria/visually-hidden": "3.8.20",
     "axios": "^1.8.4",
     "clsx": "2.1.1",
+    "embla-carousel-react": "^8.5.2",
     "framer-motion": "11.13.1",
     "intl-messageformat": "^10.5.0",
     "jose": "^6.0.10",
