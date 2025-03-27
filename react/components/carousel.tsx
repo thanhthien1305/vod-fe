@@ -13,7 +13,7 @@ export function CarouselMain() {
     >
       <CarouselContent>
         {Array.from({ length: 10 }).map((_, index) => (
-          <CarouselItem key={index} className="md:basis-1/4 lg:basis-1/6">
+          <CarouselItem key={index} className="md:basis-1/4 lg:basis-1/5">
             <CardFilm key={index} />
           </CarouselItem>
         ))}
