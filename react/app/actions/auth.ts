@@ -21,6 +21,7 @@ export async function refreshTokenApp() {
 export async function logoutApp() {
   try {
     await deleteSession();
+    localStorage.removeItem("video-on-demand");
   } catch (err) {
     console.log("error:", err);
   }

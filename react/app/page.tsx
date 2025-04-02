@@ -1,8 +1,5 @@
 "use client";
 
-import CardFilm from "@/components/film-card";
-import { Button, Input } from "@heroui/react";
-import { Carousel } from "./context/CarouselContext ";
 import { CarouselMain } from "@/components/carousel";
 
 export default function Home() {

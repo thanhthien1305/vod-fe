@@ -1,7 +1,8 @@
 
 "use client";
-import { Link, Button } from "@heroui/react";
+import { Link, Button, Avatar } from "@heroui/react";
 import SVG from "react-inlinesvg";
+import DropdownUser from "./dropdown-user";
 
 export default function Navbar() {
   const isAuth = window.location.pathname.includes("auth");
@@ -38,8 +39,7 @@ export default function Navbar() {
           <SVG src="./main/search.svg" width={24} height={24}/>
 
           <div className="avatar flex gap-2 items-center">
-            <SVG src="./main/avatar.svg" width={30} height={30}/>
-            <SVG src="./main/drop-down.svg" width={15} height={15}/>
+            <DropdownUser/>
           </div>
         </div>
         }

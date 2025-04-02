@@ -42,15 +42,17 @@ export default function RootLayout({
           "min-h-screen bg-background font-netflix antialiased"
         )}
       >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className="relative flex flex-col h-screen">
-            <Navbar />
-            <main className="mx-auto flex-grow">
-              <AppProvider>{children}</AppProvider>
-            </main>
-            <Footer />
-          </div>
-        </Providers>
+        <AppProvider>
+          <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+            <div className="relative flex flex-col h-screen">
+              <Navbar />
+              <main className="mx-auto flex-grow">
+                {children}
+              </main>
+              <Footer />
+            </div>
+          </Providers>
+        </AppProvider>
       </body>
 
     </html>
