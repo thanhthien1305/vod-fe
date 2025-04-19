@@ -13,8 +13,10 @@ const AuthPage = () => {
   const router = useRouter();
 
   const handleLogin = async (code: string) => {
+    if(!code) return;
     try {
       const res = await signin(code)?.then((res) => res.data);
+      console.log(res);
       if (res.access_token) {
         localStorage.setItem("video-on-demand", res.access_token);
         loginApp(res.access_token);
@@ -26,8 +28,7 @@ const AuthPage = () => {
   }
 
   useEffect(() => {
-    const isLogin = localStorage.getItem("video-on-demand") != null;
-    if (code && !isLogin) {
+    if (code) {
       handleLogin(code);
     }
   }, [code]);

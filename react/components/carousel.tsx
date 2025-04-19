@@ -1,9 +1,16 @@
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/app/context/CarouselContext "
+"use client"
+import { Carousel, CarouselContent, CarouselItem} from "@/app/context/CarouselContext "
 import * as React from "react"
 import CardFilm from "./film-card"
+import { getVideoList } from "@/app/api/film/film"
+import { useEffect } from "react"
 
 
 export function CarouselMain() {
+  const [films, setFilms] = React.useState([])
+  useEffect(() => {
+    getVideoList()
+  }, [])
   return (
     <Carousel
       opts={{
