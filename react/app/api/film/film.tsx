@@ -1,6 +1,6 @@
 import filmApi from "@/app/utils/filmApi"
 
-const API_ROUTER_URL = "/dev/video";
+const API_ROUTER_URL = "/video";
 export function getVideoList(next?: string, limit?: string) {
     const params = new URLSearchParams();
     if (next) {
@@ -25,4 +25,8 @@ export function getVideoList(next?: string, limit?: string) {
   
   export function deleteVideo(pk: string) {
     return filmApi.delete(`${API_ROUTER_URL}/${pk}`);
+  }
+
+  export function getTrendingVideo() {
+    return filmApi.get(`${API_ROUTER_URL}/trending`);
   }

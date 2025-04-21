@@ -10,9 +10,9 @@ import { toast } from "sonner";
 const filmApiBaseURL = process.env.NEXT_PUBLIC_COGNITO_FILM;
 
 const filmApi = axios.create({
-  baseURL: filmApiBaseURL ? `https://${filmApiBaseURL}/dev` : undefined,
+  baseURL: filmApiBaseURL ? `${filmApiBaseURL}/dev` : undefined,
   responseType: "json",
-  withCredentials: true,
+  withCredentials: false,
   timeout: 5000 * 60,
 });
 
@@ -25,7 +25,7 @@ const requestHandler = (request: InternalAxiosRequestConfig) => {
   return request;
 };
 
-const successHandler = (response: AxiosResponse) => response;
+const successHandler = (response: AxiosResponse) => response.data;
 
 const errorHandler = async (error: any) => {
   const originalRequest = error.config;

@@ -6,6 +6,9 @@ const redirect_url = "http://localhost:3000/auth";
 const clientId = process.env.NEXT_PUBLIC_CLIENT_ID; 
 
 export function signin(code?: string) {
+    if(localStorage.getItem("video-on-demand")) {
+        localStorage.removeItem("video-on-demand");
+    }
     if (!clientId || !cognitoDomain) {
         console.error("Client ID or Cognito Domain is not defined.");
         return;
