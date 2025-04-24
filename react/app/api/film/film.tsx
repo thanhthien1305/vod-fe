@@ -19,8 +19,8 @@ export function getVideoList(next?: string, limit?: string) {
     return filmApi.get(`${API_ROUTER_URL}/presigned-url?${params.toString()}`);
   }
   
-  export function updateVideo(pk: string) {
-    return filmApi.put(`${API_ROUTER_URL}/${pk}`);
+  export function updateVideo(pk: string, formData: any) {
+    return filmApi.put(`${API_ROUTER_URL}/${pk}`, formData);
   }
   
   export function deleteVideo(pk: string) {

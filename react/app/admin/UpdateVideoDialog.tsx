@@ -33,15 +33,15 @@ export default function UpdateVideoDialog({
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setFormData((prev: typeof formData) => ({
       ...prev,
       [name]: value,
     }));
   };
-
+  console.log("formData", formData);
   const handleSave = async () => {
     try {
-      await updateVideo(formData.pk, formData);
+      await updateVideo(formData.pk.replaceAll("VIDEO#", ""), formData);
       alert("Cập nhật thành công!");
       onClose();
     } catch (error) {
