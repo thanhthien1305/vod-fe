@@ -24,6 +24,7 @@ export function getVideoList(next?: string, limit?: string) {
   }
   
   export function deleteVideo(pk: string) {
+    console.log("Deleting video with pk:", pk);
     return filmApi.delete(`${API_ROUTER_URL}/${pk}`);
   }
 
