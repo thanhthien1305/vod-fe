@@ -7,10 +7,7 @@ import { useEffect } from "react"
 
 
 export function CarouselMain() {
-  const [films, setFilms] = React.useState([])
-  useEffect(() => {
-    getVideoList()
-  }, [])
+  
   return (
     <Carousel
       opts={{
