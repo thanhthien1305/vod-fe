@@ -1,7 +1,7 @@
 import filmApi from "@/app/utils/filmApi"
 
 const API_ROUTER_URL = "/video";
-export function getVideoList(next?: string, limit?: string) {
+export function getListFilm(next?: string, limit?: string) {
     const params = new URLSearchParams();
     if (next) {
       params.append("next", next);
@@ -19,15 +19,19 @@ export function getVideoList(next?: string, limit?: string) {
     return filmApi.get(`${API_ROUTER_URL}/presigned-url?${params.toString()}`);
   }
   
-  export function updateVideo(pk: string, formData: any) {
+  export function updateFilm(pk: string, formData: any) {
     return filmApi.put(`${API_ROUTER_URL}/${pk}`, formData);
   }
   
-  export function deleteVideo(pk: string) {
+  export function deleteFilm(pk: string) {
     console.log("Deleting video with pk:", pk);
     return filmApi.delete(`${API_ROUTER_URL}/${pk}`);
   }
 
-  export function getTrendingVideo() {
+  export function getTrendingFilm() {
     return filmApi.get(`${API_ROUTER_URL}/trending`);
+  }
+
+  export function getFilm(pk: string) {
+    return filmApi.get(`${API_ROUTER_URL}/${pk}`);
   }

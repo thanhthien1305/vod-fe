@@ -1,10 +1,19 @@
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
-export default function CardFilm() {
+interface FilmCardProps {
+  film: any;
+}
+export default function CardFilm({ film }: FilmCardProps) {
+    const router = useRouter();
+  const handleClick = (film: any) => {
+    const pk = film?.pk.replace("VIDEO#", "");
+    router.push(`/watch/${pk}`);
+  }
   return (
-    <div className="overflow-hidden">
+    <div className="overflow-hidden cursor-pointer" onClick={() => handleClick(film)}>
       <img 
-        src="./card-film.png" 
+        src={film?.thumbNailsUrls} 
         alt="Film Card" 
         className="transition-transform duration-300 transform hover:scale-125 hover:brightness-110 hover:shadow-lg"
       />

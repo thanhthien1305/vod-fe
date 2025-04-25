@@ -8,7 +8,7 @@ import {
   ModalFooter,
   Button,
 } from "@heroui/react";
-import { updateVideo } from "../api/film/film";
+import { updateFilm } from "../api/film/film";
 
 interface UpdateVideoDialogProps {
   isOpen: boolean;
@@ -38,10 +38,10 @@ export default function UpdateVideoDialog({
       [name]: value,
     }));
   };
-  console.log("formData", formData);
+
   const handleSave = async () => {
     try {
-      await updateVideo(formData.pk.replaceAll("VIDEO#", ""), formData);
+      await updateFilm(formData.pk.replaceAll("VIDEO#", ""), formData);
       alert("Cập nhật thành công!");
       onClose();
     } catch (error) {

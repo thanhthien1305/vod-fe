@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { deleteVideo, getVideoList } from "../api/film/film";
+import { deleteFilm, getListFilm } from "../api/film/film";
 import {
   Table,
   TableHeader,
@@ -21,7 +21,7 @@ export default function Admin() {
   const fetchFilms = async () => {
     setLoading(true);
     try {
-      const res = await getVideoList();
+      const res = await getListFilm();
       setFilms(res?.videos || []);
     } catch (error) {
       console.error("Failed to fetch videos", error);
@@ -38,7 +38,7 @@ export default function Admin() {
       try {
         console.log("Deleting video with pk:", pk);
         const id = pk.replace("VIDEO#", "");
-        await deleteVideo(id);
+        await deleteFilm(id);
         alert("Đã xóa thành công!");
         fetchFilms();
       } catch (err) {
