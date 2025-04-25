@@ -1,6 +1,7 @@
 "use client";
 
 import { getFilm } from "@/app/api/film/film";
+import { Card } from "@heroui/react";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
@@ -16,7 +17,7 @@ export default function WatchPage() {
   useEffect(() => {
     const fetchFilmData = async () => {
       const res = await getFilm(id);
-      if(res.found) {
+      if (res.found) {
         setFilmData(res.video);
       }
     };
@@ -24,19 +25,22 @@ export default function WatchPage() {
   }, [id]);
 
   return filmData && (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center p-6 w-full">
-      <h1 className="text-3xl font-bold mb-4">{filmData.title}</h1>
+    <div className="min-h-screen text-white flex flex-col items-center p-6 w-full">
+      <ReactPlayer
+        url={filmData.hlsUrl}
+        allowFullScreen
+        width="70%"
+        height="100%"
+        className="rounded-lg overflow-hidden w-[100vw] border-2 border-gray-600"
+        controls
+      />
+      <Card className="bg-gray-800 p-4 rounded-lg shadow-lg mt-4 w-[100vw]">
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-3xl font-bold mb-4">{filmData.title}</h1>
+          <p className="text-center text-gray-300 max-w-2xl">{filmData.description}</p>
+        </div>
+      </Card>
 
-        <ReactPlayer
-          url={filmData.hlsUrl}
-          allowFullScreen
-          width="70%"
-          height="100%"
-          className="rounded-lg overflow-hidden w-[100vw]"
-          controls
-        />
-
-      <p className="text-center text-gray-300 max-w-2xl">{filmData.description}</p>
     </div>
   );
 }
