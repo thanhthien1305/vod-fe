@@ -2,28 +2,11 @@
 import { Carousel, CarouselContent, CarouselItem } from "@/app/context/CarouselContext "
 import * as React from "react"
 import CardFilm from "./film-card"
-import { useEffect } from "react"
-import { getListFilm } from "@/app/api/film/film"
-import { useRouter } from "next/navigation"
 
-
-export function CarouselMain() {
-  const [films, setFilms] = React.useState([]);
-  useEffect(() => {
-    const fetchFilms = async () => {
-      try {
-        const res = await getListFilm();
-        setFilms(res?.videos || []);
-      } catch (error) {
-        console.error("Failed to fetch videos", error);
-      }
-    };
-    fetchFilms();
-  }, [])
-
-  
+export function CarouselMain({ films }: { films: any[] }) {
   return (
-    <Carousel
+    <>
+      <Carousel
       opts={{
         align: "start",
       }}
@@ -37,5 +20,6 @@ export function CarouselMain() {
         ))}
       </CarouselContent>
     </Carousel>
+    </>
   )
 }

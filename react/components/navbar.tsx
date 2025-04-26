@@ -23,13 +23,6 @@ export default function Navbar() {
               Home
             </Link>
 
-            <Link href="/" className="text-bold-headline2">
-              New & Popular
-            </Link>
-
-            <Link href="/" className="text-bold-headline2">
-              My List
-            </Link>
           </div>
         </div>
         {
