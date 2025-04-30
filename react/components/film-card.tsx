@@ -7,7 +7,7 @@ interface FilmCardProps {
 export default function CardFilm({ film }: FilmCardProps) {
     const router = useRouter();
   const handleClick = (film: any) => {
-    const pk = film?.pk.replace("VIDEO#", "");
+    const pk = film?.PK?.replace("VIDEO#", "");
     router.push(`/watch/${pk}`);
   }
   return (
