@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "lucide-react": "^0.503.0",
     "react-inlinesvg": "^4.2.0"
   }
 }

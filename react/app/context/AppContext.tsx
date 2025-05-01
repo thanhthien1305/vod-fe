@@ -36,6 +36,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           setUser(userInfo.data);
         })
         .catch(() => {
+          handleLogout();
           router.push("/auth");
           toast.error("Thông báo lỗi!", {
             description: "Vui lòng đăng nhập để sử dụng hệ thống!",
