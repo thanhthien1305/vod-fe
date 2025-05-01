@@ -5,14 +5,15 @@ import { useEffect, useState } from "react";
 import { getListFilm } from "./api/film/film";
 import { useRouter } from "next/navigation";
 import { Film } from "./interface.tsx/film";
-import { Button } from "@heroui/react";
+import { Button, useDisclosure } from "@heroui/react";
 import { Info, Play } from "lucide-react";
+import FilmDrawer from "@/components/film-drawer";
 
 export default function Home() {
   const [films, setFilms] = useState<Film[]>([]);
   const [randomFilm, setRandomFilm] = useState<Film | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-
   useEffect(() => {
     const fetchFilms = async () => {
       try {
@@ -38,7 +39,7 @@ export default function Home() {
         {randomFilm && (
           <div
             className="h-full w-full bg-cover bg-center items-center justify-start flex px-[10%]"
-            style={{ backgroundImage: `url(${randomFilm.thumbNailsUrls[0]})` }}
+            style={{ backgroundImage: `url("${randomFilm?.thumbNailsUrls[0]}")` }}
           >
             <div className="w-[30%]">
               <div className="flex text-stone-400 gap-3 text-regular-headline1 tracking-wider font-semibold
@@ -50,12 +51,18 @@ export default function Home() {
               <div className="text-white text-regular-body font-normal text-stone-400">{randomFilm.description}</div>
 
               <div className="flex gap-4 mt-4 text-regular-title2 font-semibold text-stone-400">
-                <Button className="bg-white text-black hover:bg-gray-200 rounded-sm px-4 py-2">
+                <Button className="bg-white text-black hover:bg-gray-200 rounded-sm px-4 py-2"
+                onPress={() => {
+                  router.push(`/watch/${randomFilm.PK.replace("VIDEO#", "")}`);
+                }}>
                   <Play className="w-4 h-4 mr-2" />
-                  Play</Button>
-                <Button className="rounded-sm px-4 py-2">
+                  Play
+                </Button>
+                <Button className="rounded-sm px-4 py-2" color="primary" variant="flat"
+                  onPress={() => setIsOpen(true)}>
                   <Info className="w-4 h-4 mr-2" />
                   More Info</Button>
+                <FilmDrawer film={randomFilm} isOpen={isOpen} onOpenChange={() => setIsOpen(!isOpen)}></FilmDrawer>
               </div>
             </div>
           </div>
