@@ -62,7 +62,7 @@ export default function Home() {
                   onPress={() => setIsOpen(true)}>
                   <Info className="w-4 h-4 mr-2" />
                   More Info</Button>
-                <FilmDrawer film={randomFilm} isOpen={isOpen} onOpenChange={() => setIsOpen(!isOpen)}></FilmDrawer>
+                <FilmDrawer film={randomFilm} isOpen={isOpen} onOpenChange={() => setIsOpen(!isOpen)}/>
               </div>
             </div>
           </div>

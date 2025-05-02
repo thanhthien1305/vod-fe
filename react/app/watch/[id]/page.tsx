@@ -5,13 +5,14 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import Link from "next/link";
+import { ArrowLeftIcon, FlagIcon, Settings } from "lucide-react";
 
 export default function WatchPage() {
     const [filmData, setFilmData] = useState<{ title?: string; hlsUrl?: string; episode?: string; season?: string } | null>(null);
     const [bitrateLevels, setBitrateLevels] = useState<{ bitrate: number }[]>([]);
     const { id } = useParams();
     const playerRef = useRef<ReactPlayer | null>(null);
-
+    const [isSettingBitrate, setIsSettingBitrate] = useState(false);
     const handlePlayerReady = () => {
         const hls = playerRef.current?.getInternalPlayer('hls');
         if (hls && hls.levels && hls.levels.length > 0) {
@@ -37,52 +38,39 @@ export default function WatchPage() {
         fetchFilmData();
     }, [id]);
 
-    if (!filmData?.hlsUrl) {
-        return <div className="min-h-screen bg-black text-white flex items-center justify-center">Loading...</div>;
-    }
-
-    return (
-        <div className="min-h-screen bg-black text-white relative">
+    return filmData?.hlsUrl && (
+        <div className="bg-black text-white relative">
             <div className="absolute top-4 left-4 z-10">
                 <Link href="/" className="text-white hover:text-gray-300">
-                    {/* <ArrowLeftIcon className="h-6 w-6" /> */}
+                    <ArrowLeftIcon className="h-10 w-10" />
                 </Link>
             </div>
-            
 
-            <div className="w-full h-screen flex items-center justify-center">
-                <div className="w-full max-w-screen-xl aspect-video">
-                    <ReactPlayer
-                        ref={playerRef}
-                        url={filmData.hlsUrl}
-                        width="100%"
-                        height="100%"
-                        controls // Sử dụng controls mặc định để đơn giản
-                        style={{ backgroundColor: 'black' }} // Đảm bảo nền của player là đen
-                        onReady={handlePlayerReady}
-                    />
-                    {(filmData.title || filmData.episode) && (
-                        <div className="absolute bottom-8 left-8 z-10 p-4 bg-black bg-opacity-50 rounded-md">
-                            {filmData.title && <h2 className="text-lg font-semibold">{filmData.title}</h2>}
-                            {(filmData.season && filmData.episode) && (
-                                <p className="text-gray-300 text-sm">
-                                    Season {filmData.season}, Episode {filmData.episode}
-                                </p>
-                            )}
-                        </div>
-                    )}
-                </div>
+
+            <div className="w-full">
+                <ReactPlayer
+                    ref={playerRef}
+                    url={filmData.hlsUrl}
+                    width="100vw"
+                    height="100vh"
+                    controls // Sử dụng controls mặc định để đơn giản
+                    style={{ backgroundColor: 'black' }} // Đảm bảo nền của player là đen
+                    onReady={handlePlayerReady}
+                />
             </div>
-            <div className="absolute top-4 right-4 z-10 flex items-center">
+
+            <div className="absolute top-4 right-4 z-10 flex items-center gap-8">
                 {bitrateLevels.length > 0 && (
-                    <div className="mr-4">
-                        <label htmlFor="quality-select" className="mr-2 text-sm text-gray-300">
-                            Chất lượng:
+                    <div>
+                        <label htmlFor="quality-select">
+                            <Settings className="h-10 w-10 cursor-pointer" onClick={() => setIsSettingBitrate(!isSettingBitrate)}/>
                         </label>
-                        <select
+                        {
+                            isSettingBitrate && 
+                            <select
                             id="quality-select"
                             onChange={onChangeBitrate}
-                            className="px-2 py-1 rounded bg-gray-700 text-white text-sm"
+                            className="px-2 py-1 rounded bg-gray-700 text-white text-sm absolute top-10 -left-1/2"
                         >
                             {bitrateLevels.map((level, index) => {
                                 const bitrateKbps = level.bitrate / 1000;
@@ -101,10 +89,12 @@ export default function WatchPage() {
                                 );
                             })}
                         </select>
+                        }
+                        
                     </div>
                 )}
                 <button className="text-white hover:text-gray-300">
-                    {/* <FlagIcon className="h-6 w-6" /> */}
+                    <FlagIcon className="h-10 w-10" />
                 </button>
             </div>
         </div>

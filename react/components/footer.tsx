@@ -1,9 +1,17 @@
+"use client"
 import Link from 'next/link'
-import React from 'react'
+import { usePathname } from 'next/navigation';
+import React, { useMemo } from 'react'
 
 export default function Footer() {
+    const pathname = usePathname(); 
+
+    const isWatching = useMemo(() => {
+        return pathname.includes("watch");
+    }, [pathname]);
+
     return (
-        <footer className="w-full mx-auto py-3 bg-[#333] min-h-[300px] flex flex-col justify-center relative">
+        <footer className={`w-full mx-auto py-3 bg-[#333] min-h-[300px] flex flex-col justify-center relative ${isWatching && "hidden"}`}>
             <div className="mx-auto w-[80%] flex flex-col">
                 <div className="text-white mb-4">
                     Questions? Contact us.

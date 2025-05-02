@@ -140,7 +140,7 @@ export default function FilmDrawer({ film, isOpen, onOpenChange }: FilmDrawerPro
 
 
                                         <div className="flex flex-col mt-4 gap-3 items-start">
-                                            <span className="text-small text-default-500">105 Viewer</span>
+                                            <span className="text-small text-default-500">{film.views} view</span>
                                             <div className="flex gap-2 items-center">
                                                 <AvatarGroup
                                                     isBordered
@@ -149,7 +149,7 @@ export default function FilmDrawer({ film, isOpen, onOpenChange }: FilmDrawerPro
                                                         count: "text-default-500 text-tiny bg-default-100",
                                                     }}
                                                     size="sm"
-                                                    total={101}
+                                                    total={film.views}
                                                 >
                                                     <Tooltip content="Alex">
                                                         <Avatar
