@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { getListFilm, getTrendingFilm } from "./api/film/film";
 import { useRouter } from "next/navigation";
 import { Film } from "./interface.tsx/film";
-import { Button, useDisclosure } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { Info, Play } from "lucide-react";
 import FilmDrawer from "@/components/film-drawer";
 
@@ -34,7 +34,7 @@ export default function Home() {
     const fetchTrendingFilms = async () => {
       try {
         const res = await getTrendingFilm();
-        const videoList = res?.views || [];
+        const videoList = res?.videos || [];
         setTrendingFilms(videoList);
       } catch (error) {
         console.error("Failed to fetch videos", error);

@@ -22,6 +22,7 @@ export function CarouselMain({ films }: { films: any[] }) {
           {films.map((film, index) => (
             <CarouselItem key={index} className="md:basis-1/4 lg:basis-1/5"
             onClick={() => {
+              console.log("film", film);
               setFilmDrawer(film);
               setIsOpen(true);
             }}>

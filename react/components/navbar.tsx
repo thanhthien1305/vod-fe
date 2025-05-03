@@ -6,7 +6,7 @@ import DropdownUser from "./dropdown-user";
 import { useMemo } from "react";
 
 export default function Navbar() {
-  const pathname = usePathname(); 
+  const pathname = usePathname();
 
   const isAuth = useMemo(() => pathname.includes("auth"), [pathname]);
   const isWatching = useMemo(() => pathname.includes("watch"), [pathname]);
@@ -17,6 +17,10 @@ export default function Navbar() {
         <div className="flex gap-8">
           <Link href="/">
             <SVG src="./logo.svg" width={148} height={32} />
+          </Link>
+
+          <Link href="/room" className="regular-headline1 text-white">
+            Room
           </Link>
         </div>
         {isAuth ? (

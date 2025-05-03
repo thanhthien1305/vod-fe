@@ -5,11 +5,6 @@ interface FilmCardProps {
   film: any;
 }
 export default function CardFilm({ film}: FilmCardProps) {
-    const router = useRouter();
-  // const handleClick = (film: any) => {
-  //   const pk = film?.PK?.replace("VIDEO#", "");
-  //   router.push(`/watch/${pk}`);
-  // }
   return (
     <div className="overflow-hidden cursor-pointer">
       <img 
