@@ -2,7 +2,7 @@
 
 import { CarouselMain } from "@/components/carousel";
 import { useEffect, useState } from "react";
-import { getListFilm } from "./api/film/film";
+import { getListFilm, getTrendingFilm } from "./api/film/film";
 import { useRouter } from "next/navigation";
 import { Film } from "./interface.tsx/film";
 import { Button, useDisclosure } from "@heroui/react";
@@ -11,6 +11,7 @@ import FilmDrawer from "@/components/film-drawer";
 
 export default function Home() {
   const [films, setFilms] = useState<Film[]>([]);
+  const [trendingFilms, setTrendingFilms] = useState<Film[]>([]);
   const [randomFilm, setRandomFilm] = useState<Film | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -30,7 +31,17 @@ export default function Home() {
         console.error("Failed to fetch videos", error);
       }
     };
+    const fetchTrendingFilms = async () => {
+      try {
+        const res = await getTrendingFilm();
+        const videoList = res?.views || [];
+        setTrendingFilms(videoList);
+      } catch (error) {
+        console.error("Failed to fetch videos", error);
+      }
+    }
     fetchFilms();
+    fetchTrendingFilms();
   }, []);
 
   return (
@@ -73,6 +84,11 @@ export default function Home() {
         <div className="w-[80%] space-y-4">
           <h1 className="text-white text-3xl font-semibold">Match to you</h1>
           <CarouselMain films={films} />
+        </div>
+
+        <div className="w-[80%] space-y-4">
+          <h1 className="text-white text-3xl font-semibold">Trending</h1>
+          <CarouselMain films={trendingFilms} />
         </div>
       </div>
     </div>
