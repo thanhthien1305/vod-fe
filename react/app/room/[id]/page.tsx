@@ -15,6 +15,7 @@ export default function WatchRoomPage() {
     const playerRef = useRef<ReactPlayer | null>(null);
     const [isSettingBitrate, setIsSettingBitrate] = useState(false);
     const [onHoverVideo, setOnHoverVideo] = useState(false);
+    const [filmState, setFilmState] = useState<any>(null);
     const handlePlayerReady = () => {
         const hls = playerRef.current?.getInternalPlayer('hls');
         if (hls && hls.levels && hls.levels.length > 0) {
@@ -39,6 +40,7 @@ export default function WatchRoomPage() {
     useEffect(() => {
         const fetchRoomState = async () => {
             const res = await getRoomState(id);
+            setFilmState(res);
             console.log(res);
             const filmRes = await getFilm(res.videoId);
             if (filmRes.found && filmRes.video) {
@@ -62,11 +64,19 @@ export default function WatchRoomPage() {
         };
 
         ws.onmessage = (event) => {
-                const message = JSON.parse(event.data);
+            const rawData = event.data;
+        
+            if (typeof rawData !== "string" || !rawData.trim().startsWith("{")) {
+                console.log("Received non-JSON message:", rawData);
+                return;
+            }
+        
+            try {
+                const message = JSON.parse(rawData);
+        
                 const { action, videoTime } = message;
         
                 if (!playerRef.current) return;
-        
                 const internalPlayer = playerRef.current.getInternalPlayer();
         
                 switch (action) {
@@ -80,8 +90,11 @@ export default function WatchRoomPage() {
                         internalPlayer?.pause?.();
                         break;
                     default:
-                        console.warn("Unknown action:", action);
+                        console.warn("Unknown action from WebSocket:", action);
                 }
+            } catch (error) {
+                console.error("Lỗi khi parse WebSocket JSON:", error);
+            }
         };
         
 

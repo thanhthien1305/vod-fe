@@ -7,7 +7,7 @@ export default function Footer() {
     const pathname = usePathname(); 
 
     const isWatching = useMemo(() => {
-        return pathname.includes("watch");
+        return pathname.includes("watch") || pathname.includes("room/");
     }, [pathname]);
 
     return (
