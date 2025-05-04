@@ -98,7 +98,7 @@ export default function UpdateVideoDialog({
 
     const handleSave = async () => {
         try {
-            await updateFilm(formData.pk.replaceAll("VIDEO#", ""), formData);
+            await updateFilm(formData.PK.replaceAll("VIDEO#", ""), formData);
             alert("Cập nhật thành công!");
             onClose();
         } catch (error) {
