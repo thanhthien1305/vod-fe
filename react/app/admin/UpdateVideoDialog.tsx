@@ -123,6 +123,7 @@ export default function UpdateVideoDialog({
                                 <Input label="Năm sản xuất" type="number" name="productionYear" value={formData?.productionYear || ""} onChange={handleChange} />
                                 <Input label="Quốc gia sản xuất" name="countryOfOrigin" value={formData?.countryOfOrigin || ""} onChange={handleChange} />
                                 <Input label="Đánh giá độ tuổi" name="ageRating" value={formData?.ageRating || ""} onChange={handleChange} />
+                                <Input label="Thumnail URL" name="thumbNailsUrls" value={formData?.thumbNailsUrls || ""} onChange={handleChange} />
                                 <Input
                                     label="HLS URL"
                                     name="hlsUrl"

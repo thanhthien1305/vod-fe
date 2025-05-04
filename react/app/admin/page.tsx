@@ -85,7 +85,7 @@ export default function Admin() {
                   <TableCell>{film.title || "(Chưa đặt tiêu đề)"}</TableCell>
                   <TableCell>
                     <a
-                      href={"/watch?id=" + film.pk.replace("VIDEO#", "")}
+                      href={"/watch?id=" + film?.pk?.replace("VIDEO#", "")}
                       className="text-blue-600 underline"
                       target="_blank"
                       rel="noreferrer"
