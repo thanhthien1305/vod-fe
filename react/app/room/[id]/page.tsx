@@ -30,6 +30,12 @@ export default function WatchRoomPage() {
         }
     };
 
+    const seekToTime = (seconds: number) => {
+        if (playerRef.current) {
+            playerRef.current.seekTo(seconds, "seconds");
+        }
+    };
+
     useEffect(() => {
         const fetchRoomState = async () => {
             const res = await getRoomState(id);
@@ -41,7 +47,7 @@ export default function WatchRoomPage() {
         };
         fetchRoomState();
     }, [id]);
-    
+
     const [socket, setSocket] = useState<WebSocket | null>(null);
     useEffect(() => {
         const roomId = id;
@@ -75,6 +81,18 @@ export default function WatchRoomPage() {
             }
         };
     }, []);
+    const sendRoomAction = (action: "play" | "pause" | "seek") => {
+        if (!socket || socket.readyState !== WebSocket.OPEN || !playerRef.current) return;
+
+        const currentTime = playerRef.current.getCurrentTime();
+        const message = {
+            action,
+            roomId: id,
+            videoTime: currentTime,
+            timestamp: Date.now()
+        };
+        socket.send(JSON.stringify(message));
+    };
 
     return filmData?.hlsUrl && (
         <div className="bg-black text-white relative">
@@ -88,13 +106,16 @@ export default function WatchRoomPage() {
                 <ReactPlayer
                     ref={playerRef}
                     url={filmData.hlsUrl}
-                    width="80vw"
-                    height="80vh"
-                    controls // Sử dụng controls mặc định để đơn giản
-                    style={{ backgroundColor: 'black' }} // Đảm bảo nền của player là đen
+                    width="100vw"
+                    height="100vh"
+                    controls
+                    style={{ backgroundColor: 'black' }}
                     onReady={handlePlayerReady}
                     onMouseOver={() => setOnHoverVideo(true)}
                     onMouseLeave={() => setOnHoverVideo(false)}
+                    onPlay={() => sendRoomAction("play")}
+                    onPause={() => sendRoomAction("pause")}
+                    onSeek={() => sendRoomAction("seek")}
                 />
                 <div
                     className="absolute w-[100%] bottom-1/2  from-black to-transparent p-4 transition-opacity duration-300 flex justify-between"
