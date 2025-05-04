@@ -16,6 +16,7 @@ export default function WatchRoomPage() {
     const [isSettingBitrate, setIsSettingBitrate] = useState(false);
     const [onHoverVideo, setOnHoverVideo] = useState(false);
     const [filmState, setFilmState] = useState<any>(null);
+    const [seekByOther, setSeekByOther] = useState(false);
     const handlePlayerReady = () => {
         const hls = playerRef.current?.getInternalPlayer('hls');
         if (hls && hls.levels && hls.levels.length > 0) {
@@ -81,6 +82,7 @@ export default function WatchRoomPage() {
         
                 switch (action) {
                     case "seek":
+                        setSeekByOther(true);
                         playerRef.current.seekTo(videoTime, "seconds");
                         break;
                     case "play":
@@ -116,7 +118,10 @@ export default function WatchRoomPage() {
     }, []);
     const sendRoomAction = (action: "play" | "pause" | "seek") => {
         if (!socket || socket.readyState !== WebSocket.OPEN || !playerRef.current) return;
-
+        if(seekByOther) {
+            setSeekByOther(false);
+            return;
+        }
         const currentTime = playerRef.current.getCurrentTime();
         const message = {
             action,
