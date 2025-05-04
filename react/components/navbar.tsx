@@ -9,7 +9,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const isAuth = useMemo(() => pathname.includes("auth"), [pathname]);
-  const isWatching = useMemo(() => pathname.includes("watch"), [pathname]);
+  const isWatching = useMemo(() => pathname.includes("watch") || pathname.includes("room/"), [pathname]);
 
   return (
     <nav className={`flex z-40 fixed w-[100%] mx-auto bg-transparent p-6 ${isWatching && "hidden"}`}>

@@ -6,6 +6,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import Link from "next/link";
 import { ArrowLeftIcon, FastForward, FlagIcon, Rewind, Settings } from "lucide-react";
+import { getRoomState } from "@/app/api/room/room";
 
 export default function WatchRoomPage() {
     const [filmData, setFilmData] = useState<{ title?: string; hlsUrl?: string; episode?: string; season?: string } | null>(null);
@@ -30,19 +31,22 @@ export default function WatchRoomPage() {
     };
 
     useEffect(() => {
-        const fetchFilmData = async () => {
-            const res = await getFilm(id);
-            if (res.found && res.video) {
-                setFilmData(res.video);
+        const fetchRoomState = async () => {
+            const res = await getRoomState(id);
+            console.log(res);
+            const filmRes = await getFilm(res.videoId);
+            if (filmRes.found && filmRes.video) {
+                setFilmData(filmRes.video);
             }
         };
-        fetchFilmData();
+        fetchRoomState();
     }, [id]);
+    
     const [socket, setSocket] = useState<WebSocket | null>(null);
     useEffect(() => {
         const roomId = id;
         const authToken = localStorage.getItem('video-on-demand');
-        const url = `wss://jf2uscwso1.execute-api.ap-southeast-1.amazonaws.com/dev?roomID=${roomId}`;
+        const url = `wss://jf2uscwso1.execute-api.ap-southeast-1.amazonaws.com/dev?roomID=${roomId}&token=${authToken}`;
 
         const ws = new WebSocket(url);
 
@@ -72,7 +76,6 @@ export default function WatchRoomPage() {
         };
     }, []);
 
-
     return filmData?.hlsUrl && (
         <div className="bg-black text-white relative">
             <div className="absolute top-4 left-4 z-10">
@@ -81,13 +84,12 @@ export default function WatchRoomPage() {
                 </Link>
             </div>
 
-
             <div className="w-full">
                 <ReactPlayer
                     ref={playerRef}
                     url={filmData.hlsUrl}
-                    width="100vw"
-                    height="100vh"
+                    width="80vw"
+                    height="80vh"
                     controls // Sử dụng controls mặc định để đơn giản
                     style={{ backgroundColor: 'black' }} // Đảm bảo nền của player là đen
                     onReady={handlePlayerReady}
