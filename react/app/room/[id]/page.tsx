@@ -62,7 +62,6 @@ export default function WatchRoomPage() {
         };
 
         ws.onmessage = (event) => {
-            try {
                 const message = JSON.parse(event.data);
                 const { action, videoTime } = message;
         
@@ -83,9 +82,6 @@ export default function WatchRoomPage() {
                     default:
                         console.warn("Unknown action:", action);
                 }
-            } catch (error) {
-                console.error("Lỗi xử lý tin nhắn WebSocket:", error);
-            }
         };
         
 
