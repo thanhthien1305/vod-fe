@@ -22,6 +22,13 @@ export default function WatchRoomPage() {
         if (hls && hls.levels && hls.levels.length > 0) {
             setBitrateLevels(hls.levels);
         }
+        if(filmState) {
+            const timeToSeek = (Date.now() - new Date(filmState.lastStartTime).getTime()) / 1000 + filmState.lastVideoTime;
+            console.log(timeToSeek);
+            if(timeToSeek > 0) {
+                playerRef.current?.seekTo(timeToSeek, "seconds");
+            }
+        }
     };
 
     const onChangeBitrate = (event: React.ChangeEvent<HTMLSelectElement>) => {
