@@ -49,34 +49,43 @@ export default function Home() {
       <div className="relative h-screen w-screen">
         {randomFilm && (
           <div
-            className="h-full w-full bg-cover bg-center items-center justify-start flex px-[10%]"
-            style={{ backgroundImage: `url("${randomFilm?.thumbNailsUrls[0]}")` }}
-          >
-            <div className="w-[30%]">
-              <div className="flex text-stone-400 gap-3 text-regular-headline1 tracking-wider font-semibold
-              items-center justify-start">
-                <img src="./main/N.png" className="w-6 h-8 " />
-                S E R I E S
-              </div>
-              <div className="text-white text-bold-large-title font-black ms-2">{randomFilm.title}</div>
-              <div className="text-white text-regular-body font-normal text-stone-400">{randomFilm.description}</div>
-
-              <div className="flex gap-4 mt-4 text-regular-title2 font-semibold text-stone-400">
-                <Button className="bg-white text-black hover:bg-gray-200 rounded-sm px-4 py-2"
+          className="h-full w-full bg-cover bg-center items-center justify-start flex px-[10%] relative"
+          style={{ backgroundImage: `url("${randomFilm?.thumbNailsUrls[0]}")` }}
+        >
+          {/* Overlay layer */}
+          <div className="absolute inset-0 bg-black/50"></div>
+        
+          <div className="w-[30%] relative z-10">
+            <div className="flex text-stone-400 gap-3 text-regular-headline1 tracking-wider font-semibold items-center justify-start">
+              <img src="./main/N.png" className="w-6 h-8" />
+              S E R I E S
+            </div>
+            <div className="text-white text-bold-large-title font-black ms-2">{randomFilm.title}</div>
+            <div className="text-white text-regular-body font-normal text-stone-400">{randomFilm.description}</div>
+        
+            <div className="flex gap-4 mt-4 text-regular-title2 font-semibold text-stone-400">
+              <Button
+                className="bg-white text-black hover:bg-gray-200 rounded-sm px-4 py-2"
                 onPress={() => {
                   router.push(`/watch/${randomFilm.PK.replace("VIDEO#", "")}`);
-                }}>
-                  <Play className="w-4 h-4 mr-2" />
-                  Play
-                </Button>
-                <Button className="rounded-sm px-4 py-2" color="primary" variant="flat"
-                  onPress={() => setIsOpen(true)}>
-                  <Info className="w-4 h-4 mr-2" />
-                  More Info</Button>
-                <FilmDrawer film={randomFilm} isOpen={isOpen} onOpenChange={() => setIsOpen(!isOpen)}/>
-              </div>
+                }}
+              >
+                <Play className="w-4 h-4 mr-2" />
+                Play
+              </Button>
+              <Button
+                className="rounded-sm px-4 py-2"
+                color="primary"
+                variant="flat"
+                onPress={() => setIsOpen(true)}
+              >
+                <Info className="w-4 h-4 mr-2" />
+                More Info
+              </Button>
+              <FilmDrawer film={randomFilm} isOpen={isOpen} onOpenChange={() => setIsOpen(!isOpen)} />
             </div>
           </div>
+        </div>
         )}
       </div>
 

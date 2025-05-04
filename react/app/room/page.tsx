@@ -13,7 +13,7 @@ export default function RoomPage() {
     const handleJoinRoom = () => {
         const trimmedRoomCode = roomCode.trim();
         if (trimmedRoomCode) {
-            router.push(`/watch/${trimmedRoomCode}`);
+            router.push(`/room/${trimmedRoomCode}`);
         }
     };
 
