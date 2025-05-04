@@ -62,8 +62,32 @@ export default function WatchRoomPage() {
         };
 
         ws.onmessage = (event) => {
-            console.log('Tin nhắn từ server:', event.data);
+            try {
+                const message = JSON.parse(event.data);
+                const { action, videoTime } = message;
+        
+                if (!playerRef.current) return;
+        
+                const internalPlayer = playerRef.current.getInternalPlayer();
+        
+                switch (action) {
+                    case "seek":
+                        playerRef.current.seekTo(videoTime, "seconds");
+                        break;
+                    case "play":
+                        internalPlayer?.play?.();
+                        break;
+                    case "pause":
+                        internalPlayer?.pause?.();
+                        break;
+                    default:
+                        console.warn("Unknown action:", action);
+                }
+            } catch (error) {
+                console.error("Lỗi xử lý tin nhắn WebSocket:", error);
+            }
         };
+        
 
         ws.onclose = () => {
             console.log('Đã ngắt kết nối WebSocket');
