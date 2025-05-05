@@ -1,3 +1,5 @@
+import { addComment, deleteComment, getComment, likeComment } from "@/app/api/comment/comment";
+import { useAppContext } from "@/app/context/AppContext";
 import { Film } from "@/app/interface.tsx/film";
 import {
     Drawer,
@@ -13,17 +15,72 @@ import {
     Avatar,
     AvatarGroup,
 } from "@heroui/react";
-import { Play } from "lucide-react";
+import { Play, SeparatorHorizontal } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface FilmDrawerProps {
     film: Film;
     isOpen: boolean;
     onOpenChange: () => void;
 }
-
+const mockData = [
+    {
+        "PK": "VIDEO#255a0113-5687-4f98-8fc1-2803f7ebe1e9",
+        "SK": "COMMENT#2025-05-03T11:19:35.006982917Z#a9bb1897-7d1d-401d-b728-3db6b5720315",
+        "commentId": "a9bb1897-7d1d-401d-b728-3db6b5720315",
+        "videoId": "255a0113-5687-4f98-8fc1-2803f7ebe1e9",
+        "userId": "f94a056c-9021-70f5-86f5-6dc37489e655",
+        "content": "Phim hay lắm, rất đáng xem nha",
+        "timestamp": "2025-05-03T11:19:35.006982917Z",
+        "likeCount": 0,
+        "replyCount": 0
+    },
+    {
+        "PK": "VIDEO#255a0113-5687-4f98-8fc1-2803f7ebe1e9",
+        "SK": "COMMENT#2025-05-03T11:19:42.859743148Z#26205278-8437-4e31-bda4-360f077e3811",
+        "commentId": "26205278-8437-4e31-bda4-360f077e3811",
+        "videoId": "255a0113-5687-4f98-8fc1-2803f7ebe1e9",
+        "userId": "f94a056c-9021-70f5-86f5-6dc37489e655",
+        "content": "Hayyyyyyyyyyyyyyyyy",
+        "timestamp": "2025-05-03T11:19:42.859743148Z",
+        "likeCount": 0,
+        "replyCount": 0
+    },
+    {
+        "PK": "VIDEO#255a0113-5687-4f98-8fc1-2803f7ebe1e9",
+        "SK": "COMMENT#2025-05-03T11:19:49.413249693Z#7ff2dc3c-369c-42fb-92df-d6982fb0d409",
+        "commentId": "7ff2dc3c-369c-42fb-92df-d6982fb0d409",
+        "videoId": "255a0113-5687-4f98-8fc1-2803f7ebe1e9",
+        "userId": "f94a056c-9021-70f5-86f5-6dc37489e655",
+        "content": "Tẹeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "timestamp": "2025-05-03T11:19:49.413249693Z",
+        "likeCount": 0,
+        "replyCount": 1
+    }
+];
 export default function FilmDrawer({ film, isOpen, onOpenChange }: FilmDrawerProps) {
+    const { user } = useAppContext();
     const router = useRouter();
+    const [comment, setComment] = useState<any[]>(mockData);
+    const [loading, setLoading] = useState(false);
+    const [newComment, setNewComment] = useState("");
+
+    const fetchComment = async (videoId: string) => {
+        setLoading(false);
+        const res = await getComment(videoId);
+        if (res) {
+            setComment(res);
+        }
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        if (film?.PK) {
+            fetchComment(film.PK.replace("VIDEO#", ""));
+        }
+    }, [film]);
+
     return (
         <>
             <Drawer
@@ -183,6 +240,99 @@ export default function FilmDrawer({ film, isOpen, onOpenChange }: FilmDrawerPro
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+
+                                <SeparatorHorizontal />
+                                <div className="flex flex-col gap-3 px-6 mt-6">
+                                    <h3 className="text-lg font-bold text-white">Comments</h3>
+                                    {!loading ? (
+                                        <p className="text-default-500">Loading comments...</p>
+                                    ) : comment.length === 0 ? (
+                                        <p className="text-default-500 italic">No comments yet.</p>
+                                    ) : (
+                                        comment.map((c) => (
+                                            <div
+                                                key={c.commentId}
+                                                className="flex gap-3 items-start p-3 bg-default-100/10 rounded-md relative"
+                                            >
+                                                <Avatar
+                                                    name={`User ${c.userId.slice(0, 4)}`}
+                                                    src={`https://i.pravatar.cc/150?u=${c.username}`}
+                                                    className="mt-1"
+                                                />
+                                                <div className="flex flex-col w-full">
+                                                    <div className="flex justify-between">
+                                                        <span className="text-sm font-semibold text-white">
+                                                            {c.username}
+                                                        </span>
+                                                        <span className="text-xs text-default-400">
+                                                            {new Date(c.timestamp).toLocaleString("vi-VN", {
+                                                                day: "2-digit",
+                                                                month: "2-digit",
+                                                                year: "numeric",
+                                                                hour: "2-digit",
+                                                                minute: "2-digit",
+                                                            })}
+                                                        </span>
+                                                    </div>
+                                                    <p className="text-sm text-default-500 mt-1">{c.content}</p>
+                                                    <div className="flex items-center mt-2 gap-2">
+                                                        <button
+                                                            onClick={async () => {
+                                                                await likeComment(c.commentId);
+                                                                fetchComment(film.PK.replace("VIDEO#", ""));
+                                                            }}
+                                                            className="text-xs text-white hover:text-primary-500 flex items-center gap-1"
+                                                        >
+                                                            ❤️ {c.likeCount}
+                                                        </button>
+                                                        <span className="text-xs text-default-400">
+                                                            Replies: {c.replyCount}
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                {c.userId === user?.id && (
+                                                    <button
+                                                        onClick={async () => {
+                                                            await deleteComment(c.commentId);
+                                                            fetchComment(film.PK.replace("VIDEO#", ""));
+                                                        }}
+                                                        className="absolute top-1 right-1 text-red-400 hover:text-red-600 text-xs"
+                                                        title="Delete comment"
+                                                    >
+                                                        ❌
+                                                    </button>
+                                                )}
+                                            </div>
+                                        ))
+                                    )}
+                                </div>
+
+                                <div className="flex flex-col gap-2 px-6 mt-6">
+                                    <h3 className="text-lg font-bold text-white">Add a comment</h3>
+                                    <textarea
+                                        value={newComment}
+                                        onChange={(e) => setNewComment(e.target.value)}
+                                        placeholder="Write your comment here..."
+                                        className="text-sm p-2 rounded-md border bg-black text-white border-default-100 resize-none"
+                                        rows={3}
+                                    />
+                                    <Button
+                                        className="bg-primary text-white w-fit"
+                                        onPress={async () => {
+                                            if (!newComment.trim()) return;
+                                            await addComment({
+                                                videoId: film.PK.replace("VIDEO#", ""),
+                                                userId: user.id,
+                                                content: newComment,
+                                            });
+                                            setNewComment("");
+                                            fetchComment(film.PK.replace("VIDEO#", ""));
+                                        }}
+                                    >
+                                        Submit
+                                    </Button>
                                 </div>
                             </DrawerBody>
 
