@@ -123,7 +123,16 @@ export default function UpdateVideoDialog({
                                 <Input label="Năm sản xuất" type="number" name="productionYear" value={formData?.productionYear || ""} onChange={handleChange} />
                                 <Input label="Quốc gia sản xuất" name="countryOfOrigin" value={formData?.countryOfOrigin || ""} onChange={handleChange} />
                                 <Input label="Đánh giá độ tuổi" name="ageRating" value={formData?.ageRating || ""} onChange={handleChange} />
-                                <Input label="Thumnail URL" name="thumbNailsUrls" value={formData?.thumbNailsUrls || ""} onChange={handleChange} />
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">ThumbNailsUrls</label>
+                                    {(formData?.thumbNailsUrls || []).map((url: string, index: number) => (
+                                        <div key={index} className="flex items-center mb-2">
+                                            <Input value={url} onChange={(e) => handleArrayChange(e, "thumbNailsUrls", index)} className="mr-2" />
+                                            <Button size="sm" color="danger" onPress={() => handleRemoveFromArray("thumbNailsUrls", index)}>Xóa</Button>
+                                        </div>
+                                    ))}
+                                    <Button size="sm" onPress={() => handleAddToArray("thumbNailsUrls")}>Thêm ngôn ngữ</Button>
+                                </div>
                                 <Input
                                     label="HLS URL"
                                     name="hlsUrl"
