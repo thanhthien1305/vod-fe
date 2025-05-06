@@ -123,7 +123,7 @@ export const Comment: React.FC<CommentProps> = ({ comment, film }) => {
                                     await addComment({
                                         videoId: film.PK.replace("VIDEO#", ""),
                                         content: newComment,
-                                        parentId: encodeURIComponent(comment.SK.replace("COMMENT#", "")),
+                                        parentId: comment.SK.replace("COMMENT#", ""),
                                     });
                                     setNewComment("");
                                     setIsAddComment(false);
