@@ -18,6 +18,7 @@ import {
 import { Play, SeparatorHorizontal } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Comment } from "./comment-item";
 
 interface FilmDrawerProps {
     film: Film;
@@ -65,7 +66,7 @@ export default function FilmDrawer({ film, isOpen, onOpenChange }: FilmDrawerPro
     const [comment, setComment] = useState<any[]>(mockData);
     const [loading, setLoading] = useState(false);
     const [newComment, setNewComment] = useState("");
-    console.log(comment)
+
     const fetchComment = async (videoId: string) => {
         setLoading(true);
         const res = await getComment(videoId);
@@ -251,59 +252,7 @@ export default function FilmDrawer({ film, isOpen, onOpenChange }: FilmDrawerPro
                                         <p className="text-default-500 italic">No comments yet.</p>
                                     ) : (
                                         comment.map((c) => (
-                                            <div
-                                                key={c.commentId}
-                                                className="flex gap-3 items-start p-3 bg-default-100/10 rounded-md relative"
-                                            >
-                                                <Avatar
-                                                    name={`User ${c.userId.slice(0, 4)}`}
-                                                    src={`https://i.pravatar.cc/150?u=${c.userName}`}
-                                                    className="mt-1"
-                                                />
-                                                <div className="flex flex-col w-full">
-                                                    <div className="flex justify-between">
-                                                        <span className="text-sm font-semibold text-white">
-                                                            {c.userName}
-                                                        </span>
-                                                        <span className="text-xs text-default-400">
-                                                            {new Date(c.timestamp).toLocaleString("vi-VN", {
-                                                                day: "2-digit",
-                                                                month: "2-digit",
-                                                                year: "numeric",
-                                                                hour: "2-digit",
-                                                                minute: "2-digit",
-                                                            })}
-                                                        </span>
-                                                    </div>
-                                                    <p className="text-sm text-default-500 mt-1">{c.content}</p>
-                                                    <div className="flex items-center mt-2 gap-2">
-                                                        <button
-                                                            onClick={async () => {
-                                                                await likeComment(c.commentId);
-                                                                fetchComment(film.PK.replace("VIDEO#", ""));
-                                                            }}
-                                                            className="text-xs text-white hover:text-primary-500 flex items-center gap-1"
-                                                        >
-                                                            ❤️ {c.likeCount}
-                                                        </button>
-                                                        <span className="text-xs text-default-400">
-                                                            Replies: {c.replyCount}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                {c.userId === user?.sub && (
-                                                    <button
-                                                        onClick={async () => {
-                                                            await deleteComment(c.commentId, film.PK.replace("VIDEO#", ""));
-                                                            fetchComment(film.PK.replace("VIDEO#", ""));
-                                                        }}
-                                                        className="absolute bottom-1 right-1 text-red-400 hover:text-red-600 text-xs"
-                                                        title="Delete comment"
-                                                    >
-                                                        ❌
-                                                    </button>
-                                                )}
-                                            </div>
+                                            <Comment key={c.commentId} comment={c} film={film} />
                                         ))
                                     )}
                                 </div>
