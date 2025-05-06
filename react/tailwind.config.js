@@ -9,6 +9,18 @@ const config = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        'bubble-up': {
+          '0%': { opacity: '0', transform: 'translate(-50%, 0) scale(0.95)' },
+          '10%': { opacity: '1', transform: 'translate(-50%, -20px) scale(1)' },
+          '50%': { opacity: '1', transform: 'translate(-50%, -120px) scale(1.05)' },
+          '80%': { opacity: '0.7', transform: 'translate(-50%, -220px) scale(1)' },
+          '100%': { opacity: '0', transform: 'translate(-50%, -320px) scale(0.9)' },
+        },
+      },
+      animation: {
+        'bubble-up': 'bubble-up 4s ease-in-out forwards',
+      },
       fontFamily: {
         sans: ["var(--font-sans)"],
         mono: ["var(--font-mono)"],

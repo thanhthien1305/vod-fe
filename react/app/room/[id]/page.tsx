@@ -9,6 +9,7 @@ import { ArrowLeftIcon, FastForward, FlagIcon, Rewind, Settings } from "lucide-r
 import { getRoomState } from "@/app/api/room/room";
 import { Button } from "@heroui/button";
 import { useAppContext } from "@/app/context/AppContext";
+import { Avatar } from "@heroui/react";
 
 export default function WatchRoomPage() {
     const { user } = useAppContext();
@@ -22,7 +23,7 @@ export default function WatchRoomPage() {
     const [seekByOther, setSeekByOther] = useState(false);
     const [newChatMessage, setNewChatMessage] = useState<string>("");
     const [isChatOpen, setIsChatOpen] = useState(false);
-    const [chatBubbles, setChatBubbles] = useState<{ id: number; message: string }[]>([]);
+    const [chatBubbles, setChatBubbles] = useState<{ userName: string; message: string }[]>([]);
 
     const handlePlayerReady = () => {
         const hls = playerRef.current?.getInternalPlayer('hls');
@@ -89,9 +90,9 @@ export default function WatchRoomPage() {
                 // 🔹 Hiển thị bong bóng khi nhận chat
                 if (chatMessage && userName) {
                     const id = Date.now();
-                    setChatBubbles(prev => [...prev, { id, message: `${userName}: ${chatMessage}` }]);
+                    setChatBubbles(prev => [...prev, { userName: userName, message: chatMessage }]);
                     setTimeout(() => {
-                        setChatBubbles(prev => prev.filter(b => b.id !== id));
+                        setChatBubbles(prev => prev.slice(0, -1));
                     }, 4000);
                 }
 
@@ -219,16 +220,9 @@ export default function WatchRoomPage() {
 
                     </div>
                 )}
-                <button className="text-white hover:text-gray-300">
-                    <FlagIcon className="h-10 w-10" />
-                </button>
-            </div>
-
-            {/* Chat button ở góc phải dưới */}
-            <div className="fixed bottom-6 right-6 z-50">
                 <button
                     onClick={() => setIsChatOpen(!isChatOpen)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg"
+                    className={`bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg ${isChatOpen && "hidden"}`}
                 >
                     💬
                 </button>
@@ -252,20 +246,34 @@ export default function WatchRoomPage() {
                         value={newChatMessage}
                         onChange={(e) => setNewChatMessage(e.target.value)}
                     />
+                    <div className="flex justify-end">
                     <Button onPress={() => {
                         socket?.send(JSON.stringify({ userName: user?.username, message: newChatMessage }));
+                        setChatBubbles([...chatBubbles, { userName: user?.username, message: newChatMessage }]);
                     }} className="bg-blue-600 hover:bg-blue-700 text-white mt-2">Send</Button>
+                    </div>
+                    
                 </div>
             )}
-            {chatBubbles.map((bubble) => (
-                <div
-                    key={bubble.id}
-                    className="chat-bubble fixed bottom-12 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 py-2 rounded-full shadow-md text-sm z-50"
-                >
-                    {bubble.message}
-                </div>
-            ))}
+            {chatBubbles.map((bubble, index) => {
+                return (
+                    <div
+                        key={index}
+                        className={`fixed bottom-12 left-[20%] transform -translate-x-1/2 bg-blue-600 text-white
+                         px-4 py-2 rounded-full shadow-md text-sm z-50 animate-bubble-up flex items-center 
+                         gap-4 w-fit max-w-[600px]`}
+                    >
+                        <Avatar
+                            src={`https://i.pravatar.cc/150?u=${bubble.userName}`}
+                        />
+                        <div>
+                            <strong className="text-xl">{bubble.userName} </strong>
 
+                            <div className="text-sm">{bubble.message}</div>
+                        </div>
+                    </div>
+                )
+            })}
         </div>
     );
 }
