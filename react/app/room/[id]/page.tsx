@@ -7,8 +7,11 @@ import ReactPlayer from "react-player";
 import Link from "next/link";
 import { ArrowLeftIcon, FastForward, FlagIcon, Rewind, Settings } from "lucide-react";
 import { getRoomState } from "@/app/api/room/room";
+import { Button } from "@heroui/button";
+import { useAppContext } from "@/app/context/AppContext";
 
 export default function WatchRoomPage() {
+    const { user } = useAppContext();
     const [filmData, setFilmData] = useState<{ title?: string; hlsUrl?: string; episode?: string; season?: string } | null>(null);
     const [bitrateLevels, setBitrateLevels] = useState<{ bitrate: number }[]>([]);
     const { id } = useParams();
@@ -17,15 +20,19 @@ export default function WatchRoomPage() {
     const [onHoverVideo, setOnHoverVideo] = useState(false);
     const [filmState, setFilmState] = useState<any>(null);
     const [seekByOther, setSeekByOther] = useState(false);
+    const [newChatMessage, setNewChatMessage] = useState<string>("");
+    const [isChatOpen, setIsChatOpen] = useState(false);
+    const [chatBubbles, setChatBubbles] = useState<{ id: number; message: string }[]>([]);
+
     const handlePlayerReady = () => {
         const hls = playerRef.current?.getInternalPlayer('hls');
         if (hls && hls.levels && hls.levels.length > 0) {
             setBitrateLevels(hls.levels);
         }
-        if(filmState) {
+        if (filmState) {
             const timeToSeek = (Date.now() - new Date(filmState.lastStartTime).getTime()) / 1000 + filmState.lastVideoTime;
             console.log(timeToSeek);
-            if(timeToSeek > 0) {
+            if (timeToSeek > 0) {
                 playerRef.current?.seekTo(timeToSeek, "seconds");
             }
         }
@@ -73,39 +80,34 @@ export default function WatchRoomPage() {
 
         ws.onmessage = (event) => {
             const rawData = event.data;
-        
-            if (typeof rawData !== "string" || !rawData.trim().startsWith("{")) {
-                console.log("Received non-JSON message:", rawData);
-                return;
-            }
-        
+            if (typeof rawData !== "string" || !rawData.trim().startsWith("{")) return;
+
             try {
-                const message = JSON.parse(rawData);
-        
-                const { action, videoTime } = message;
-        
+                const data = JSON.parse(rawData);
+                const { action, videoTime, userName, message: chatMessage } = data;
+
+                // 🔹 Hiển thị bong bóng khi nhận chat
+                if (chatMessage && userName) {
+                    const id = Date.now();
+                    setChatBubbles(prev => [...prev, { id, message: `${userName}: ${chatMessage}` }]);
+                    setTimeout(() => {
+                        setChatBubbles(prev => prev.filter(b => b.id !== id));
+                    }, 4000);
+                }
+
+                // 🔹 Các hành động video
                 if (!playerRef.current) return;
                 const internalPlayer = playerRef.current.getInternalPlayer();
-        
+
                 switch (action) {
-                    case "seek":
-                        setSeekByOther(true);
-                        playerRef.current.seekTo(videoTime, "seconds");
-                        break;
-                    case "play":
-                        internalPlayer?.play?.();
-                        break;
-                    case "pause":
-                        internalPlayer?.pause?.();
-                        break;
-                    default:
-                        console.warn("Unknown action from WebSocket:", action);
+                    case "seek": setSeekByOther(true); playerRef.current.seekTo(videoTime, "seconds"); break;
+                    case "play": internalPlayer?.play?.(); break;
+                    case "pause": internalPlayer?.pause?.(); break;
                 }
             } catch (error) {
-                console.error("Lỗi khi parse WebSocket JSON:", error);
+                console.error("Lỗi parse JSON:", error);
             }
         };
-        
 
         ws.onclose = () => {
             console.log('Đã ngắt kết nối WebSocket');
@@ -125,7 +127,7 @@ export default function WatchRoomPage() {
     }, []);
     const sendRoomAction = (action: "play" | "pause" | "seek") => {
         if (!socket || socket.readyState !== WebSocket.OPEN || !playerRef.current) return;
-        if(seekByOther) {
+        if (seekByOther) {
             setSeekByOther(false);
             return;
         }
@@ -221,6 +223,49 @@ export default function WatchRoomPage() {
                     <FlagIcon className="h-10 w-10" />
                 </button>
             </div>
+
+            {/* Chat button ở góc phải dưới */}
+            <div className="fixed bottom-6 right-6 z-50">
+                <button
+                    onClick={() => setIsChatOpen(!isChatOpen)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg"
+                >
+                    💬
+                </button>
+            </div>
+
+            {/* Hộp chat hiển thị khi mở */}
+            {isChatOpen && (
+                <div className="fixed bottom-20 right-6 w-80 bg-white rounded-lg shadow-lg p-4 z-50">
+                    <div className="flex justify-between items-center mb-2">
+                        <h3 className="text-black font-semibold">Chat</h3>
+                        <Button onPress={() => setIsChatOpen(false)} className="bg-red-600 hover:bg-red-700 text-white">✖</Button>
+                    </div>
+                    <div className="h-40 overflow-y-auto bg-gray-100 p-2 mb-2 rounded text-sm text-black">
+                        {/* Tin nhắn có thể được hiển thị ở đây */}
+                        <p className="text-gray-600">Chào bạn! Hãy để lại câu hỏi.</p>
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="Nhập tin nhắn..."
+                        className="w-full p-2 border rounded text-black"
+                        value={newChatMessage}
+                        onChange={(e) => setNewChatMessage(e.target.value)}
+                    />
+                    <Button onPress={() => {
+                        socket?.send(JSON.stringify({ userName: user?.username, message: newChatMessage }));
+                    }} className="bg-blue-600 hover:bg-blue-700 text-white mt-2">Send</Button>
+                </div>
+            )}
+            {chatBubbles.map((bubble) => (
+                <div
+                    key={bubble.id}
+                    className="chat-bubble fixed bottom-12 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 py-2 rounded-full shadow-md text-sm z-50"
+                >
+                    {bubble.message}
+                </div>
+            ))}
+
         </div>
     );
 }
