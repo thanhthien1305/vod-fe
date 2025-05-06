@@ -16,7 +16,7 @@ const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
 const API = axios.create({
   baseURL: process.env.NEXT_PUBLIC_COGNITO_DOMAIN,
   responseType: "json",
-  withCredentials: true,
+  withCredentials: false,
   timeout: 5000 * 60,
 });
 

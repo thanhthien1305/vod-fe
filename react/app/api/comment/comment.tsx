@@ -9,8 +9,8 @@ export function addComment( data: any) {
   return filmApi.post(`${API_ROUTER_URL}`, data);
 }
 
-export function deleteComment(commentId: string) {
-  return filmApi.delete(`${API_ROUTER_URL}/${commentId}`);
+export function deleteComment(commentId: string, videoId: string) {
+  return filmApi.delete(`${API_ROUTER_URL}/${videoId}/${commentId}`);
 }
 
 export function likeComment(commentId: string) {
