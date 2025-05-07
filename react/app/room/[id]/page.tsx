@@ -108,13 +108,12 @@ export default function WatchRoomPage() {
             try {
                 const data = JSON.parse(rawData);
                 const { action, videoTime, userName, message: chatMessage, userId } = data;
-
-                // 🔹 Hiển thị bong bóng khi nhận chat
-                if (chatMessage && userName) {
+                console.log(data);
+                if (chatMessage && userName && userId) {
+                    console.log(chatMessage, userName);
                     setChatBubbles(prev => [...prev, { userId: userId, userName: userName, message: chatMessage }]);
                 }
 
-                // 🔹 Các hành động video
                 if (!playerRef.current) return;
                 const internalPlayer = playerRef.current.getInternalPlayer();
 
