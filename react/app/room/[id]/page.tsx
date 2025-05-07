@@ -23,7 +23,7 @@ export default function WatchRoomPage() {
     const [seekByOther, setSeekByOther] = useState(false);
     const [newChatMessage, setNewChatMessage] = useState<string>("");
     const [isChatOpen, setIsChatOpen] = useState(false);
-    const [chatBubbles, setChatBubbles] = useState<{ userId: string; userName: string; message: string }[]>([]);
+    const [chatBubbles, setChatBubbles] = useState<{ userId: string; userName: string; content: string }[]>([]);
 
     const handlePlayerReady = () => {
         const hls = playerRef.current?.getInternalPlayer('hls');
@@ -83,7 +83,7 @@ export default function WatchRoomPage() {
         };
 
         socket.send(JSON.stringify(message));
-        setChatBubbles(prev => [...prev, { userId: user.sub, userName: user.username, message: newChatMessage }]);
+        setChatBubbles(prev => [...prev, { userId: user.sub, userName: user.username, content: newChatMessage }]);
         setNewChatMessage("");
     };
 
@@ -103,15 +103,16 @@ export default function WatchRoomPage() {
 
         ws.onmessage = (event) => {
             const rawData = event.data;
+            console.log(rawData, typeof rawData !== "string" || !rawData.trim().startsWith("{"));
             if (typeof rawData !== "string" || !rawData.trim().startsWith("{")) return;
 
             try {
                 const data = JSON.parse(rawData);
-                const { action, videoTime, userName, message: chatMessage, userId } = data;
-                console.log(data);
-                if (chatMessage && userName && userId) {
-                    console.log(chatMessage, userName);
-                    setChatBubbles(prev => [...prev, { userId: userId, userName: userName, message: chatMessage }]);
+                const { action, videoTime, userName, content, userId } = data;
+                
+                if (content && userName && userId) {
+                    console.log(content, userName);
+                    setChatBubbles(prev => [...prev, { userId: userId, userName: userName, content: content }]);
                 }
 
                 if (!playerRef.current) return;
@@ -272,7 +273,7 @@ export default function WatchRoomPage() {
                                             }`}
                                     >
                                         <p className="font-semibold">{bubble.userName}</p>
-                                        <p className="text-sm">{bubble.message}</p>
+                                        <p className="text-sm">{bubble.content}</p>
                                     </div>
 
                                     {isCurrentUser && (
@@ -318,7 +319,7 @@ export default function WatchRoomPage() {
                         />
                         <div>
                             <strong className="text-xl">{bubble.userName} </strong>
-                            <div className="text-sm">{bubble.message}</div>
+                            <div className="text-sm">{bubble.content}</div>
                         </div>
                     </div>
                 );
