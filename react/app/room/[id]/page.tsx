@@ -74,12 +74,12 @@ export default function WatchRoomPage() {
     }, [id]);
 
     const sendMessage = () => {
+        console.log("asdasdas")
         if (!socket || socket.readyState !== WebSocket.OPEN || !newChatMessage.trim()) return;
 
         const message = {
-            userId: user.sub,
-            userName: user.username,
-            content: newChatMessage,
+            action: "chat",
+            content: newChatMessage
         };
 
         socket.send(JSON.stringify(message));
@@ -285,6 +285,7 @@ export default function WatchRoomPage() {
                     </div>
 
                     <form onSubmit={(e) => {
+                        e.stopPropagation();
                         e.preventDefault();
                         sendMessage();
                     }}>
@@ -297,9 +298,11 @@ export default function WatchRoomPage() {
                         />
 
                         <div className="flex justify-end">
-                            <Button onPress={() => {
+                            <button onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
                                 sendMessage();
-                            }} className="bg-blue-600 hover:bg-blue-700 text-white mt-2">Send</Button>
+                            }} className="bg-blue-600 hover:bg-blue-700 text-white mt-2 px-3 py-2 rounded">Send</button>
                         </div>
                     </form>
                 </div>
