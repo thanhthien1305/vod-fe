@@ -23,7 +23,7 @@ export default function WatchRoomPage() {
     const [seekByOther, setSeekByOther] = useState(false);
     const [newChatMessage, setNewChatMessage] = useState<string>("");
     const [isChatOpen, setIsChatOpen] = useState(false);
-    const [chatBubbles, setChatBubbles] = useState<{ userName: string; message: string }[]>([]);
+    const [chatBubbles, setChatBubbles] = useState<{ userId: string; userName: string; message: string }[]>([]);
 
     const handlePlayerReady = () => {
         const hls = playerRef.current?.getInternalPlayer('hls');
@@ -77,13 +77,13 @@ export default function WatchRoomPage() {
         if (!socket || socket.readyState !== WebSocket.OPEN || !newChatMessage.trim()) return;
 
         const message = {
-            userId: user.pub,
+            userId: user.sub,
             userName: user.username,
             content: newChatMessage,
         };
 
         socket.send(JSON.stringify(message));
-        setChatBubbles(prev => [...prev, { userName: user.username, message: newChatMessage }]);
+        setChatBubbles(prev => [...prev, { userId: user.sub, userName: user.username, message: newChatMessage }]);
         setNewChatMessage("");
     };
 
@@ -107,11 +107,11 @@ export default function WatchRoomPage() {
 
             try {
                 const data = JSON.parse(rawData);
-                const { action, videoTime, userName, message: chatMessage } = data;
+                const { action, videoTime, userName, message: chatMessage, userId } = data;
 
                 // 🔹 Hiển thị bong bóng khi nhận chat
                 if (chatMessage && userName) {
-                    setChatBubbles(prev => [...prev, { userName: userName, message: chatMessage }]);
+                    setChatBubbles(prev => [...prev, { userId: userId, userName: userName, message: chatMessage }]);
                 }
 
                 // 🔹 Các hành động video
@@ -256,16 +256,34 @@ export default function WatchRoomPage() {
 
                     {/* Danh sách tin nhắn */}
                     <div className="flex-1 overflow-y-auto bg-gray-100 p-2 mb-2 rounded space-y-2">
-                        {chatBubbles.map((bubble, index) => (
-                            <div key={index} className="flex items-start gap-2">
-                                <Avatar src={`https://i.pravatar.cc/150?u=${bubble.userName}`} />
-                                <div className="bg-blue-600 text-white px-3 py-2 rounded-lg max-w-[220px]">
-                                    <p className="font-semibold">{bubble.userName}</p>
-                                    <p className="text-sm">{bubble.message}</p>
+                        {chatBubbles.map((bubble, index) => {
+                            const isCurrentUser = bubble.userId === user.sub;
+
+                            return (
+                                <div
+                                    key={index}
+                                    className={`flex items-start gap-2 ${isCurrentUser ? 'justify-end' : ''}`}
+                                >
+                                    {!isCurrentUser && (
+                                        <Avatar src={`https://i.pravatar.cc/150?u=${bubble.userName}`} />
+                                    )}
+
+                                    <div
+                                        className={`px-3 py-2 rounded-lg max-w-[220px] text-white ${isCurrentUser ? 'bg-green-500' : 'bg-blue-600'
+                                            }`}
+                                    >
+                                        <p className="font-semibold">{bubble.userName}</p>
+                                        <p className="text-sm">{bubble.message}</p>
+                                    </div>
+
+                                    {isCurrentUser && (
+                                        <Avatar src={`https://i.pravatar.cc/150?u=${bubble.userName}`} />
+                                    )}
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
+
                     <form onSubmit={(e) => {
                         e.preventDefault();
                         sendMessage();
@@ -287,24 +305,26 @@ export default function WatchRoomPage() {
                 </div>
             )}
             {chatBubbles.map((bubble, index) => {
+                const isCurrentUser = bubble.userId === user.sub;
                 return (
                     <div
                         key={index}
-                        className={`fixed bottom-12 left-[20%] transform -translate-x-1/2 bg-blue-600 text-white
-                         px-4 py-2 rounded-full shadow-md text-sm z-50 animate-bubble-up flex items-center 
-                         gap-4 w-fit max-w-[600px]`}
+                        className={`fixed bottom-12 ${isCurrentUser ? 'right-[20%]' : 'left-[20%]'}
+             transform -translate-x-1/2 ${isCurrentUser ? 'bg-green-600' : 'bg-blue-600'} text-white
+             px-4 py-2 rounded-full shadow-md text-sm z-50 animate-bubble-up flex items-center 
+             gap-4 w-fit max-w-[600px]`}
                     >
                         <Avatar
                             src={`https://i.pravatar.cc/150?u=${bubble.userName}`}
                         />
                         <div>
                             <strong className="text-xl">{bubble.userName} </strong>
-
                             <div className="text-sm">{bubble.message}</div>
                         </div>
                     </div>
-                )
+                );
             })}
+
         </div>
     );
 }
