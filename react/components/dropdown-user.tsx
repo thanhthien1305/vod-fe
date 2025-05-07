@@ -9,7 +9,7 @@ export default function DropdownUser() {
     return (
         <Popover placement="bottom">
             <PopoverTrigger>
-                <Avatar src={`https://i.pravatar.cc/150?u=${user?.name}`} />
+                <Avatar src={`https://i.pravatar.cc/150?u=${user?.username}`} />
 
             </PopoverTrigger>
             <PopoverContent>
