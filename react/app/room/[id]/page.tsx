@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import Link from "next/link";
 import { ArrowLeftIcon, FastForward, FlagIcon, Rewind, Settings } from "lucide-react";
-import { getRoomState } from "@/app/api/room/room";
+import { getRoomChat, getRoomState } from "@/app/api/room/room";
 import { Button } from "@heroui/button";
 import { useAppContext } from "@/app/context/AppContext";
 import { Avatar } from "@heroui/react";
@@ -57,14 +57,36 @@ export default function WatchRoomPage() {
         const fetchRoomState = async () => {
             const res = await getRoomState(id);
             setFilmState(res);
-            console.log(res);
             const filmRes = await getFilm(res.videoId);
             if (filmRes.found && filmRes.video) {
                 setFilmData(filmRes.video);
             }
         };
+        const fetchRoomChat = async () => {
+            const res = await getRoomChat(id);
+
+            if (res) {
+                setChatBubbles(res);
+            }
+        };
+        fetchRoomChat();
         fetchRoomState();
     }, [id]);
+
+    const sendMessage = () => {
+        if (!socket || socket.readyState !== WebSocket.OPEN || !newChatMessage.trim()) return;
+
+        const message = {
+            userId: user.pub,
+            userName: user.username,
+            content: newChatMessage,
+        };
+
+        socket.send(JSON.stringify(message));
+        setChatBubbles(prev => [...prev, { userName: user.username, message: newChatMessage }]);
+        setNewChatMessage("");
+    };
+
 
     const [socket, setSocket] = useState<WebSocket | null>(null);
     useEffect(() => {
@@ -89,11 +111,7 @@ export default function WatchRoomPage() {
 
                 // 🔹 Hiển thị bong bóng khi nhận chat
                 if (chatMessage && userName) {
-                    const id = Date.now();
                     setChatBubbles(prev => [...prev, { userName: userName, message: chatMessage }]);
-                    setTimeout(() => {
-                        setChatBubbles(prev => prev.slice(0, -1));
-                    }, 4000);
                 }
 
                 // 🔹 Các hành động video
@@ -230,29 +248,42 @@ export default function WatchRoomPage() {
 
             {/* Hộp chat hiển thị khi mở */}
             {isChatOpen && (
-                <div className="fixed bottom-20 right-6 w-80 bg-white rounded-lg shadow-lg p-4 z-50">
+                <div className="fixed flex flex-col bottom-20 right-6 w-[40%] h-[80%] bg-white rounded-lg shadow-lg p-4 z-50">
                     <div className="flex justify-between items-center mb-2">
                         <h3 className="text-black font-semibold">Chat</h3>
                         <Button onPress={() => setIsChatOpen(false)} className="bg-red-600 hover:bg-red-700 text-white">✖</Button>
                     </div>
-                    <div className="h-40 overflow-y-auto bg-gray-100 p-2 mb-2 rounded text-sm text-black">
-                        {/* Tin nhắn có thể được hiển thị ở đây */}
-                        <p className="text-gray-600">Chào bạn! Hãy để lại câu hỏi.</p>
+
+                    {/* Danh sách tin nhắn */}
+                    <div className="flex-1 overflow-y-auto bg-gray-100 p-2 mb-2 rounded space-y-2">
+                        {chatBubbles.map((bubble, index) => (
+                            <div key={index} className="flex items-start gap-2">
+                                <Avatar src={`https://i.pravatar.cc/150?u=${bubble.userName}`} />
+                                <div className="bg-blue-600 text-white px-3 py-2 rounded-lg max-w-[220px]">
+                                    <p className="font-semibold">{bubble.userName}</p>
+                                    <p className="text-sm">{bubble.message}</p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                    <input
-                        type="text"
-                        placeholder="Nhập tin nhắn..."
-                        className="w-full p-2 border rounded text-black"
-                        value={newChatMessage}
-                        onChange={(e) => setNewChatMessage(e.target.value)}
-                    />
-                    <div className="flex justify-end">
-                    <Button onPress={() => {
-                        socket?.send(JSON.stringify({ userName: user?.username, message: newChatMessage }));
-                        setChatBubbles([...chatBubbles, { userName: user?.username, message: newChatMessage }]);
-                    }} className="bg-blue-600 hover:bg-blue-700 text-white mt-2">Send</Button>
-                    </div>
-                    
+                    <form onSubmit={(e) => {
+                        e.preventDefault();
+                        sendMessage();
+                    }}>
+                        <input
+                            type="text"
+                            value={newChatMessage}
+                            onChange={(e) => setNewChatMessage(e.target.value)}
+                            placeholder="Nhập tin nhắn..."
+                            className="w-full p-2 bg-gray-800 text-white rounded"
+                        />
+
+                        <div className="flex justify-end">
+                            <Button onPress={() => {
+                                sendMessage();
+                            }} className="bg-blue-600 hover:bg-blue-700 text-white mt-2">Send</Button>
+                        </div>
+                    </form>
                 </div>
             )}
             {chatBubbles.map((bubble, index) => {

@@ -9,3 +9,7 @@ const API_ROUTER_URL = "/rooms";
   export function getRoomState(roomId: string) {
     return filmApi.get(`${API_ROUTER_URL}/state/${roomId}`);
   }
+
+  export function getRoomChat(roomId: string) {
+    return filmApi.get(`${API_ROUTER_URL}/chat/${roomId}`);
+  }
