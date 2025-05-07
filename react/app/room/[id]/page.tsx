@@ -32,7 +32,6 @@ export default function WatchRoomPage() {
         }
         if (filmState) {
             const timeToSeek = (Date.now() - new Date(filmState.lastStartTime).getTime()) / 1000 + filmState.lastVideoTime;
-            console.log(timeToSeek);
             if (timeToSeek > 0) {
                 playerRef.current?.seekTo(timeToSeek, "seconds");
             }
@@ -74,7 +73,6 @@ export default function WatchRoomPage() {
     }, [id]);
 
     const sendMessage = () => {
-        console.log("asdasdas")
         if (!socket || socket.readyState !== WebSocket.OPEN || !newChatMessage.trim()) return;
 
         const message = {
@@ -83,7 +81,6 @@ export default function WatchRoomPage() {
         };
 
         socket.send(JSON.stringify(message));
-        setChatBubbles(prev => [...prev, { userId: user.sub, userName: user.username, content: newChatMessage }]);
         setNewChatMessage("");
     };
 
@@ -103,15 +100,13 @@ export default function WatchRoomPage() {
 
         ws.onmessage = (event) => {
             const rawData = event.data;
-            console.log(rawData, typeof rawData !== "string" || !rawData.trim().startsWith("{"));
             if (typeof rawData !== "string" || !rawData.trim().startsWith("{")) return;
 
             try {
                 const data = JSON.parse(rawData);
                 const { action, videoTime, userName, content, userId } = data;
-                
+
                 if (content && userName && userId) {
-                    console.log(content, userName);
                     setChatBubbles(prev => [...prev, { userId: userId, userName: userName, content: content }]);
                 }
 
