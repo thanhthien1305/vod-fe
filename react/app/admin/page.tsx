@@ -22,7 +22,7 @@ export default function Admin() {
     setLoading(true);
     try {
       const res = await getListFilm();
-      setFilms(res?.videos || []);
+      setFilms(res?.data.videos || []);
     } catch (error) {
       console.error("Failed to fetch videos", error);
     }

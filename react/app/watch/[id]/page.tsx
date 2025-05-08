@@ -31,9 +31,10 @@ export default function WatchPage() {
 
     useEffect(() => {
         const fetchFilmData = async () => {
-            const res = await getFilm(id);
-            if (res.found && res.video) {
-                setFilmData(res.video);
+            if(!id) return;
+            const res = await getFilm(id.toString());
+            if (res.data.found && res.data.video) {
+                setFilmData(res.data.video);
             }
         };
         fetchFilmData();

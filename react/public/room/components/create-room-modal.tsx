@@ -35,7 +35,7 @@ export default function CreateRoomModal({ isOpen, setIsOpen }: CreateRoomModalPr
     const fetchFilms = async () => {
       try {
         const res = await getListFilm();
-        const videoList = res?.videos || [];
+        const videoList = res?.data.videos || [];
         setFilms(videoList);
         if (videoList.length > 0) setSelectedFilm(videoList[0]);
       } catch (error) {

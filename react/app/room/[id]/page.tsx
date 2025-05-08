@@ -54,18 +54,20 @@ export default function WatchRoomPage() {
 
     useEffect(() => {
         const fetchRoomState = async () => {
-            const res = await getRoomState(id);
+            if(!id) return;
+            const res = await getRoomState(id.toString());
             setFilmState(res);
-            const filmRes = await getFilm(res.videoId);
-            if (filmRes.found && filmRes.video) {
-                setFilmData(filmRes.video);
+            const filmRes = await getFilm(res.data.videoId);
+            if (filmRes.data.found && filmRes.data.video) {
+                setFilmData(filmRes.data.video);
             }
         };
         const fetchRoomChat = async () => {
-            const res = await getRoomChat(id);
+            if(!id) return;
+            const res = await getRoomChat(id.toString());
 
             if (res) {
-                setChatBubbles(res);
+                setChatBubbles(res.data);
             }
         };
         fetchRoomChat();

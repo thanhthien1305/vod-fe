@@ -33,7 +33,7 @@ export const Comment: React.FC<CommentProps> = ({ comment, film }) => {
     const fetchReplies = async (videoId: string, parentId?: string) => {
         const res = await getComment(videoId, parentId);
         if (res) {
-            setReplies(res);
+            setReplies(res.data);
         }
     };
 

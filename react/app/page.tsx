@@ -19,7 +19,7 @@ export default function Home() {
     const fetchFilms = async () => {
       try {
         const res = await getListFilm();
-        const videoList = res?.videos || [];
+        const videoList = res?.data.videos || [];
         setFilms(videoList);
 
         // Lấy một phim ngẫu nhiên nếu danh sách không rỗng
@@ -34,7 +34,7 @@ export default function Home() {
     const fetchTrendingFilms = async () => {
       try {
         const res = await getTrendingFilm();
-        const videoList = res?.videos || [];
+        const videoList = res?.data.videos || [];
         setTrendingFilms(videoList);
       } catch (error) {
         console.error("Failed to fetch videos", error);

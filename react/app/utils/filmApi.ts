@@ -25,7 +25,7 @@ const requestHandler = (request: InternalAxiosRequestConfig) => {
   return request;
 };
 
-const successHandler = (response: AxiosResponse) => response.data;
+const successHandler = (response: AxiosResponse) => response;
 
 const errorHandler = async (error: any) => {
   const originalRequest = error.config;

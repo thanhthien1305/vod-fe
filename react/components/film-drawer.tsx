@@ -71,7 +71,7 @@ export default function FilmDrawer({ film, isOpen, onOpenChange }: FilmDrawerPro
         setLoading(true);
         const res = await getComment(videoId);
         if (res) {
-            setComment(res);
+            setComment(res.data);
         }
         setLoading(false);
     };
@@ -248,10 +248,10 @@ export default function FilmDrawer({ film, isOpen, onOpenChange }: FilmDrawerPro
                                     <h3 className="text-lg font-bold text-white">Comments</h3>
                                     {loading ? (
                                         <p className="text-default-500">Loading comments...</p>
-                                    ) : comment.length === 0 ? (
+                                    ) : comment?.length === 0 ? (
                                         <p className="text-default-500 italic">No comments yet.</p>
                                     ) : (
-                                        comment.map((c) => (
+                                        comment?.map((c) => (
                                             <Comment key={c.commentId} comment={c} film={film} />
                                         ))
                                     )}
