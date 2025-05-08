@@ -16,7 +16,7 @@ Live Demo: https://vod-fe.vercel.app
 - 🔄 UI updates in real-time based on shared room state
 - ☁️ Frontend deployed on Vercel
 
----
+
 
 ## 🧱 Architecture Overview
 
@@ -30,38 +30,8 @@ yaml
 Sao chép
 Chỉnh sửa
 
----
 
-## ⚙️ Getting Started (Local)
-1. Install dependencies
-bash
-Sao chép
-Chỉnh sửa
-pnpm install
-Or use npm install if you're not using pnpm.
 
-2. Create .env.local file
-env
-Sao chép
-Chỉnh sửa
-NEXT_PUBLIC_API_URL=https://your-api-gateway.amazonaws.com/dev
-NEXT_PUBLIC_WS_URL=wss://your-websocket-url.amazonaws.com/dev
-3. Run development server
-bash
-Sao chép
-Chỉnh sửa
-pnpm dev
-🚀 Deploy on Vercel
-1. Push the repository to GitHub or GitLab
-2. Go to https://vercel.com and create a new project from your repo
-3. Set environment variables in Vercel settings:
-env
-Sao chép
-Chỉnh sửa
-NEXT_PUBLIC_API_URL=https://your-api-gateway.amazonaws.com/dev
-NEXT_PUBLIC_WS_URL=wss://your-websocket-url.amazonaws.com/dev
-
-5. Click Deploy and you're live 🎉
 🔌 How WebSocket Sync Works
 When a user creates or joins a room, the client opens a WebSocket connection to AWS.
 
