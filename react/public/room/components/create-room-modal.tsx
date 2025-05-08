@@ -55,7 +55,7 @@ export default function CreateRoomModal({ isOpen, setIsOpen }: CreateRoomModalPr
         maxParticipants,
       };
       const res = await createRoom(payload);
-      const roomId = res?.roomId;
+      const roomId = res?.data.roomId;
   
       if (roomId) {
         addToast({
