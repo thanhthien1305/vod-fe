@@ -1,8 +1,11 @@
-# 📺 VOD Frontend (`vod-fe`)
+# 📺 [VOD Frontend]([url](https://vod-fe.vercel.app)) (`vod-fe`)
 
 This is the frontend for the Video On Demand (VOD) application that allows users to watch movies individually or join synchronized **watch parties** with friends. It is deployed using **Vercel**, while the backend is powered by **AWS Lambda, API Gateway, WebSocket API**, and **DynamoDB**.
 
 ---
+Live Demo: https://vod-fe.vercel.app
+
+⚠️ Note: This demo is hosted on Vercel and may be unavailable in the future due to resource limits or project changes.
 
 ## 🚀 Features
 
